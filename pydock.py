@@ -369,10 +369,11 @@ if __name__ == '__main__':
 			cmds += [
 				base_run("oneoffcoder/java-jupyter", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
 			]
-		if _cmd_string == "gclone":
-			cmds += [
-				base_run("", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
-			]
+		if _cmd_string == "gclone": #dock.sh -x frun -d alpine/git:latest --baredocker -c clone https://github.com/franceme/franceme.github.io /sync/franceme.github.io
+			for arg in args.cmd:
+				cmds += [
+					base_run("alpine/git:latest", args.ports, None,None, args.mount, args.dind, f"clone {arg} {args.mount}/{arg.split('/')[-1]}",args,baredocker=False)
+				]
 		if _cmd_string == "lab":
 			cmds += [
 				base_run("frantzme/pythondev:latest", ["8675"], None, None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
