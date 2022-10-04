@@ -124,7 +124,7 @@ def getDockerImage(input, usebaredocker=False):
 def getArgs():
 	global docker_username
 	import argparse
-	parser = argparse.ArgumentParser("Dcokerpush = useful utilities for running docker images")
+	parser = argparse.ArgumentParser("DockerPush = useful utilities for running docker images")
 	parser.add_argument("-x","--command", help="The Docker image to be used", nargs='*', default="clean")
 	parser.add_argument("-d","--docker", help="The Docker image to be used", nargs='*', default="frantzme/pydev:latest")
 	parser.add_argument("--baredocker", help="Don't use the bare docker name provided: {}".format(docker_username), action="store_true",default=False)
