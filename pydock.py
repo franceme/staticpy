@@ -101,7 +101,7 @@ def getPort(ports=[], prefix="-p"):
 
 dir = '%cd%' if sys.platform in ['win32','cygwin'] else '`pwd`'
 
-def getDockerImage(input):
+def getDockerImage(input, usebaredocker=False):
 	if "/" not in input:
 		use_lite = ":lite" in input
 		if "pydev" in input:
@@ -112,15 +112,22 @@ def getDockerImage(input):
 			output = f"{docker_username}/{input}:latest"
 		if use_lite:
 			output = output.replace(':latest','') + ":lite"
-		return output.replace(':latest:latest',':latest').replace(':lite:lite',':lite')
+		output = output.replace(':latest:latest',':latest').replace(':lite:lite',':lite')
+
+		if usebaredocker:
+			output = output.replace("{}/".format(docker_username),"")
+
+		return output
 	else:
 		return input
 
 def getArgs():
+	global docker_username
 	import argparse
 	parser = argparse.ArgumentParser("Dcokerpush = useful utilities for running docker images")
-	parser.add_argument("-x","--command", help="The Docker image to be used", nargs=1, default="clean")
+	parser.add_argument("-x","--command", help="The Docker image to be used", nargs='*', default="clean")
 	parser.add_argument("-d","--docker", help="The Docker image to be used", nargs='*', default="frantzme/pydev:latest")
+	parser.add_argument("--baredocker", help="Don't use the bare docker name provided: {}".format(docker_username), action="store_true",default=False)
 	parser.add_argument("-p","--ports", help="The ports to be exposed", nargs="*", default=[])
 	parser.add_argument("-c","--cmd", help="The cmd to be run", nargs="*", default=["/bin/bash"])
 	parser.add_argument("--dind", help="Use Docker In Docker", action="store_true", default=False)
@@ -134,6 +141,7 @@ def getArgs():
 	parser.add_argument("--Login", help="Login", action="store_true",default=False)
 	parser.add_argument("--Logout", help="Logout", action="store_true",default=False)
 	parser.add_argument("--Logg", help="Login and Logout", action="store_true",default=False)
+	parser.add_argument("--execute", help="Execute the script (default is True)", action="store_false",default=True)
 	#args,unknown = parser.parse_known_args()
 	args = parser.parse_args()
 	return args 
@@ -152,7 +160,7 @@ def clean(args):
 			f"{docker} builder prune -f -a"
 	]
 
-def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",args=None):
+def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",args=None,baredocker=False):
 	global docker
 	try:
 		shared,useshared = args.shared,args.useshared
@@ -177,7 +185,7 @@ def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", din
 
 	use_dir = "$EXCHANGE_PATH" if useshared else dir
 
-	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {getDockerImage(dockerName)} {cmd or ''}"
+	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {getDockerImage(dockerName,baredocker)} {cmd or ''}"
 
 def write_docker_compose(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",name="kinde"):
 	global docker
@@ -259,8 +267,8 @@ if __name__ == '__main__':
 		sys.argv = ' '.join(sys.argv[:-1]).split(' ')
 	args, cmds, execute = getArgs(), [], True
 
-	regrun = lambda x:base_run(x, args.ports, "", args.detach, args.mount, args.dind, ' '.join(args.cmd),args)
-	regcmd = lambda x,y:base_run(x, args.ports, "", args.detach, args.mount, args.dind, y,args)
+	regrun = lambda x:base_run(x, args.ports, "", args.detach, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker)
+	regcmd = lambda x,y:base_run(x, args.ports, "", args.detach, args.mount, args.dind, y,args,baredocker=args.baredocker)
 
 	set_docker(args.sudo)
 
@@ -269,7 +277,9 @@ if __name__ == '__main__':
 			f"{docker} login"
 		]
 
-	for _cmd_string in str(args.command[0]).strip().lower().split(";"):
+	for _cmd_string in args.command:
+		_cmd_string = str(_cmd_string).strip().lower()
+
 		if _cmd_string.strip() == "":
 			print("No command specified")
 			sys.exit(1)
@@ -294,10 +304,10 @@ if __name__ == '__main__':
 							print(line)
 						break
 		if _cmd_string == "pose":
-			write_docker_compose(getDockerImage(args.docker[0]), args.ports, "", args.detach, args.mount, args.dind, args.cmd, args.name)
+			write_docker_compose(getDockerImage(args.docker[0],args.baredocker), args.ports, "", args.detach, args.mount, args.dind, args.cmd, args.name)
 		if _cmd_string == "poser":
 			cmds += [
-				write_docker_compose(getDockerImage(args.docker[0]), args.ports, "", args.detach, args.mount, args.dind, args.cmd,args.name),
+				write_docker_compose(getDockerImage(args.docker[0],args.baredocker), args.ports, "", args.detach, args.mount, args.dind, args.cmd,args.name),
 				"rm docker-compose.yml"
 			]
 		if _cmd_string in ["run","frun"]:
@@ -306,7 +316,7 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "wrap":
 			cmds += [
-				base_run(args.docker[0], args.ports, "", args.detach, args.mount, args.dind, args.cmd,args)
+				base_run(args.docker[0], args.ports, "", args.detach, args.mount, args.dind, args.cmd,args,baredocker=args.baredocker)
 			] + clean(args)
 		if _cmd_string == "pylite":
 			cmds += [
@@ -322,7 +332,7 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "netdata" and False: #Need to figure out
 			cmds += [
-				base_run("netdata/netdata:latest", ['19999'], f"-v netdataconfig:/etc/netdata -v netdatalib:/var/lib/netdata -v netdatacache:/var/cache/netdata -v /etc/passwd:/host/etc/passwd:ro -v /etc/group:/host/etc/group:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /etc/os-release:/host/etc/os-release:ro {'--restart unless-stopped' if args.detach else ''} --cap-add SYS_PTRACE --security-opt apparmor=unconfined", args.detach, args.mount, args.dind, "",args)
+				base_run("netdata/netdata:latest", ['19999'], f"-v netdataconfig:/etc/netdata -v netdatalib:/var/lib/netdata -v netdatacache:/var/cache/netdata -v /etc/passwd:/host/etc/passwd:ro -v /etc/group:/host/etc/group:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /etc/os-release:/host/etc/os-release:ro {'--restart unless-stopped' if args.detach else ''} --cap-add SYS_PTRACE --security-opt apparmor=unconfined", args.detach, args.mount, args.dind, "",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "mypy":
 			cmds += [
@@ -331,8 +341,8 @@ if __name__ == '__main__':
 		if _cmd_string == "dive":
 			#https://github.com/wagoodman/dive
 			cmds += [
-				f"{docker} pull {getDockerImage(args.docker[0])}",
-				f"dive {getDockerImage(args.docker[0])}"
+				f"{docker} pull {getDockerImage(args.docker[0],args.baredocker)}",
+				f"dive {getDockerImage(args.docker[0],args.baredocker)}"
 			]
 		if _cmd_string == "build":
 			cmds = [
@@ -341,44 +351,48 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "lopy":
 			cmds += [
-				base_run("frantzme/pythondev:latest", [], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick -i {args.cmd} \"",args)
+				base_run("frantzme/pythondev:latest", [], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick -i {args.cmd} \"",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "blockly":
 			cmds += [
-				base_run("frantzme/ml:latest", ["5000"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "blockly",args)
+				base_run("frantzme/ml:latest", ["5000"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "blockly",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "mll":
 			cmds += [
-				base_run("dagshub/ml-workspace:latest", ["8080"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick\"",args)
+				base_run("dagshub/ml-workspace:latest", ["8080"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick\"",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "labpy":
 			cmds += [
-				base_run("frantzme/pythondev:latest", ["8888"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "jupyter lab --ip=0.0.0.0 --allow-root --port 8888 --notebook-dir=\"/sync/\"",args)
+				base_run("frantzme/pythondev:latest", ["8888"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "jupyter lab --ip=0.0.0.0 --allow-root --port 8888 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "jlab":
 			cmds += [
-				base_run("oneoffcoder/java-jupyter", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args)
+				base_run("oneoffcoder/java-jupyter", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
+			]
+		if _cmd_string == "gclone":
+			cmds += [
+				base_run("", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "lab":
 			cmds += [
-				base_run("frantzme/pythondev:latest", ["8675"], None, None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args)
+				base_run("frantzme/pythondev:latest", ["8675"], None, None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "sos":
 			cmds += [
-				base_run("vatlab/sos-notebook", ["8678"], None, None, "/home/jovyan/work", args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8678",args)
+				base_run("vatlab/sos-notebook", ["8678"], None, None, "/home/jovyan/work", args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8678",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "polynote":
 			#https://github.com/polynote/polynote/blob/master/docker/README.md
 			cmds += [
-				base_run("polynote/polynote:latest", ["8192"], None, None, "data", args.dind, f"-p 127.0.0.1:8192:8192 -p 127.0.0.1:4040-4050:4040-4050",args)
+				base_run("polynote/polynote:latest", ["8192"], None, None, "data", args.dind, f"-p 127.0.0.1:8192:8192 -p 127.0.0.1:4040-4050:4040-4050",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "polynote2":
 			cmds += [
-				base_run("xtreamsrl/polynote-docker", ["8192"],None, args.detach,"/data", args.dind, args.cmd,args)
+				base_run("xtreamsrl/polynote-docker", ["8192"],None, args.detach,"/data", args.dind, args.cmd,args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "cmd":
 			cmds += [
-				base_run(args.docker[0], args.ports, None, None, args.mount, args.dind, ' '.join(args.cmd),args)
+				base_run(args.docker[0], args.ports, None, None, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "qodana-jvm":
 			output_results = "qodana_jvm_results"
@@ -388,31 +402,31 @@ if __name__ == '__main__':
 				pass
 
 			cmds += [
-				base_run("jetbrains/qodana-jvm", ["8080"], f"-v \"{output_results}:/data/results/\"  --show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args)
+				base_run("jetbrains/qodana-jvm", ["8080"], f"-v \"{output_results}:/data/results/\"  --show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "qodana-py":
 			cmds += [
-				base_run("jetbrains/qodana-python:2022.1-eap", ["8080"], "--show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args)
+				base_run("jetbrains/qodana-python:2022.1-eap", ["8080"], "--show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "splunk":
 			cmds += [
-				base_run("splunk/splunk:latest", ["8000"], "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'",None, args.mount, args.dind, "start",args)
+				base_run("splunk/splunk:latest", ["8000"], "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'",None, args.mount, args.dind, "start",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "beaker":
 			cmds += [
-				base_run("beakerx/beakerx", ["8888"], None, args.detach, args.mount, args.dind, "/bin/bash",args)
+				base_run("beakerx/beakerx", ["8888"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "superset":
 			cmds += [
-				base_run("apache/superset:latest", ["8088"], None, args.detach, args.mount, args.dind, "/bin/bash",args)
+				base_run("apache/superset:latest", ["8088"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
 			]
 		if _cmd_string == "mysql":
 			cmds += [
-				base_run("mysql:latest", ["3306"], "-e MYSQL_ROOT_PASSWORD=root", args.detach, args.mount, args.dind, "/bin/bash",args)
+				base_run("mysql:latest", ["3306"], "-e MYSQL_ROOT_PASSWORD=root", args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
 			]
 		if _cmd_string in ["load","pull"]:
 			cmds += [
-				f"{docker} pull {getDockerImage(args.docker[0])}"
+				f"{docker} pull {getDockerImage(args.docker[0],args.baredocker)}"
 			]
 		if _cmd_string in ["clean","frun"]:
 			cmds += clean(args)
@@ -435,14 +449,14 @@ if __name__ == '__main__':
 				print("Please enter a docker name")
 				sys.exit(0)
 
-			dockerName = getDockerImage(sys.argv[2].strip()).replace(':latest', '')
+			dockerName = getDockerImage(sys.argv[2].strip(),args.baredocker).replace(':latest', '')
 			cmds = [
-				f"{docker} kill $({docker} ps |grep {getDockerImage()}|awk '{{print $1}}')",
+				f"{docker} kill $({docker} ps |grep {getDockerImage(dockerName,args.baredocker)}|awk '{{print $1}}')",
 				f"{docker} rmi $(docker images |grep {dockerName}|awk '{{print $3}}')"
 			]
 		if _cmd_string in ["loads","pulls"]:
 			for load in args.docker:
-				cmds += [f"{docker} pull {getDockerImage(load)}"]
+				cmds += [f"{docker} pull {getDockerImage(load,args.baredocker)}"]
 
 		if args.Logout or args.Logg:
 			cmds += [
@@ -452,7 +466,7 @@ if __name__ == '__main__':
 	for x in cmds:
 		try:
 			print(f"> {x}")
-			if execute:
+			if args.execute:
 				os.system(x)
 		except:
 			pass
