@@ -1,3 +1,1 @@
-# PythonTemplate
-
-Simple Template
+# Static Python File Hosting
