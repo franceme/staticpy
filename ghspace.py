@@ -14,7 +14,7 @@ if len(sys.argv) >= 2:
 for cmd in [
     "gh auth login",
     "gh auth refresh -h github.com -s codespace",
-    "gh codespace ssh",
+    #"gh codespace ssh",
 
     "gh codespace ssh --config >> ~/.ssh/config",
     "cat ~/.ssh/codespaces"
