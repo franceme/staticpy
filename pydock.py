@@ -189,7 +189,7 @@ def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", din
 
 	use_dir = "$EXCHANGE_PATH" if useshared else dir
 
-	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {'--mac ' + str(mac) if mac else ''} {getDockerImage(dockerName,baredocker)} {cmd or ''}"
+	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {'--mac-address ' + str(mac) if mac else ''} {getDockerImage(dockerName,baredocker)} {cmd or ''}"
 
 def write_docker_compose(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",name="kinde"):
 	global docker
