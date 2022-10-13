@@ -20,4 +20,4 @@ sleep 1m
 echo "Getting PIP"
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 sleep 1m
-Python-3.8.12/python get-pip.py
+echo Python-3.8.12/python get-pip.py
