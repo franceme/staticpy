@@ -60,7 +60,7 @@ remote_file = lambda remote,file:  file.strip().replace('__/','/home/' + remote[
 
 def getArgs():
 	import argparse
-	parser = argparse.ArgumentParser("ZZ new aide")
+	parser = argparse.ArgumentParser("ZZ aide")
 	parser.add_argument("-n","--name", help="The name of the endpoint", nargs=1, default="remote")
 	parser.add_argument("-f","--foil", help="The location file of additional computers", nargs='?', default=None)
 	parser.add_argument("-p","--ports", help="The ports to be exposed", nargs="*", default=[])
@@ -151,9 +151,9 @@ if __name__ == '__main__':
 				pass
 			args.cmd = f"docker run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
 		elif args.pycharm:
-			args.pycharm = os.path.abspath(args.pycharm)
-
-			args.cmd = f"docker run --rm -it -v {args.pycharm}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
+			args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
+		elif args.intellij:
+			args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
 
 		if args.download:
 			cmds += [down(computer, args.download)]
