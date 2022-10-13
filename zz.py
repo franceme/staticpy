@@ -72,6 +72,8 @@ def getArgs():
 	parser.add_argument("--jupyter", help="Run JupyterLab",action='store_true',default=False)
 	parser.add_argument("--splunk", help="Run Splunk",action='store_true',default=False)
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
+	parser.add_argument("--pycharm", help="Run PyCharm",nargs="?", default=None)
+	parser.add_argument("--intellij", help="Run Intellij",nargs="?", default=None)
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
@@ -140,7 +142,7 @@ if __name__ == '__main__':
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
 			args.jqodana = os.path.abspath(args.jqodana)
-			path = '/'.join(args.pyqodana.split('/')[:-1])
+			path = '/'.join(args.jqodana.split('/')[:-1])
 
 			args.results = os.path.join(path, args.results)
 			try:
@@ -148,6 +150,10 @@ if __name__ == '__main__':
 			except:
 				pass
 			args.cmd = f"docker run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
+		elif args.pycharm:
+			args.pycharm = os.path.abspath(args.pycharm)
+
+			args.cmd = f"docker run --rm -it -v {args.pycharm}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
 
 		if args.download:
 			cmds += [down(computer, args.download)]
