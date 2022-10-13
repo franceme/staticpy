@@ -134,6 +134,10 @@ def getArgs():
 	parser.add_argument("--detach", help="Run the docker imagr detached", action="store_true",default=False)
 	parser.add_argument("--shebang", help="", action="store_true",default=False)
 	parser.add_argument("--sudo", help="Add sudo onto docker", action="store_true",default=False)
+
+	#https://stackoverflow.com/questions/42946453/how-does-the-docker-assign-mac-addresses-to-containers
+	parser.add_argument("--mac", help="Set the Mac Address",default=None)
+
 	parser.add_argument("--mount", help="mount the current directory to which virtual folder",default="/sync")
 	parser.add_argument("-n","--name", help="The name of the image",default="kinde") 
 	parser.add_argument("--shared", help="Created a shared folder between docker and internal dockers.", action="store_true",default=False) #https://stackoverflow.com/questions/53539807/why-docker-in-docker-dind-containers-mount-volumes-with-host-path#answer-53542041
@@ -160,7 +164,7 @@ def clean(args):
 			f"{docker} builder prune -f -a"
 	]
 
-def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",args=None,baredocker=False):
+def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash", args=None, baredocker=False, mac=None):
 	global docker
 	try:
 		shared,useshared = args.shared,args.useshared
@@ -185,7 +189,7 @@ def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", din
 
 	use_dir = "$EXCHANGE_PATH" if useshared else dir
 
-	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {getDockerImage(dockerName,baredocker)} {cmd or ''}"
+	return f"{docker} run {dockerInDocker} --rm {'-d' if detatched else '-it'} -v \"{use_dir}:{mount}\" {exchanged} {getPort(ports)} {flags or ''} {'--mac-address ' + str(mac) if mac else ''} {getDockerImage(dockerName,baredocker)} {cmd or ''}"
 
 def write_docker_compose(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash",name="kinde"):
 	global docker
@@ -267,8 +271,8 @@ if __name__ == '__main__':
 		sys.argv = ' '.join(sys.argv[:-1]).split(' ')
 	args, cmds, execute = getArgs(), [], True
 
-	regrun = lambda x:base_run(x, args.ports, "", args.detach, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker)
-	regcmd = lambda x,y:base_run(x, args.ports, "", args.detach, args.mount, args.dind, y,args,baredocker=args.baredocker)
+	regrun = lambda x:base_run(x, args.ports, "", args.detach, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker, mac=args.mac)
+	regcmd = lambda x,y:base_run(x, args.ports, "", args.detach, args.mount, args.dind, y,args,baredocker=args.baredocker, mac=args.mac)
 
 	set_docker(args.sudo)
 
@@ -316,7 +320,7 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "wrap":
 			cmds += [
-				base_run(args.docker[0], args.ports, "", args.detach, args.mount, args.dind, args.cmd,args,baredocker=args.baredocker)
+				base_run(args.docker[0], args.ports, "", args.detach, args.mount, args.dind, args.cmd,args,baredocker=args.baredocker, mac=args.mac)
 			] + clean(args)
 		if _cmd_string == "pylite":
 			cmds += [
@@ -332,7 +336,7 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "netdata" and False: #Need to figure out
 			cmds += [
-				base_run("netdata/netdata:latest", ['19999'], f"-v netdataconfig:/etc/netdata -v netdatalib:/var/lib/netdata -v netdatacache:/var/cache/netdata -v /etc/passwd:/host/etc/passwd:ro -v /etc/group:/host/etc/group:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /etc/os-release:/host/etc/os-release:ro {'--restart unless-stopped' if args.detach else ''} --cap-add SYS_PTRACE --security-opt apparmor=unconfined", args.detach, args.mount, args.dind, "",args,baredocker=args.baredocker)
+				base_run("netdata/netdata:latest", ['19999'], f"-v netdataconfig:/etc/netdata -v netdatalib:/var/lib/netdata -v netdatacache:/var/cache/netdata -v /etc/passwd:/host/etc/passwd:ro -v /etc/group:/host/etc/group:ro -v /proc:/host/proc:ro -v /sys:/host/sys:ro -v /etc/os-release:/host/etc/os-release:ro {'--restart unless-stopped' if args.detach else ''} --cap-add SYS_PTRACE --security-opt apparmor=unconfined", args.detach, args.mount, args.dind, "",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "mypy":
 			cmds += [
@@ -351,49 +355,49 @@ if __name__ == '__main__':
 			]
 		if _cmd_string == "lopy":
 			cmds += [
-				base_run("frantzme/pythondev:latest", [], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick -i {args.cmd} \"",args,baredocker=args.baredocker)
+				base_run("frantzme/pythondev:latest", [], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick -i {args.cmd} \"",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "blockly":
 			cmds += [
-				base_run("frantzme/ml:latest", ["5000"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "blockly",args,baredocker=args.baredocker)
+				base_run("frantzme/ml:latest", ["5000"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "blockly",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "mll":
 			cmds += [
-				base_run("dagshub/ml-workspace:latest", ["8080"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick\"",args,baredocker=args.baredocker)
+				base_run("dagshub/ml-workspace:latest", ["8080"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "bash -c \"cd /sync && ipython3 --no-banner --no-confirm-exit --quick\"",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "labpy":
 			cmds += [
-				base_run("frantzme/pythondev:latest", ["8888"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "jupyter lab --ip=0.0.0.0 --allow-root --port 8888 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
+				base_run("frantzme/pythondev:latest", ["8888"], "--env AUTHENTICATE_VIA_JUPYTER=\"password\"", args.detach, args.mount, args.dind, "jupyter lab --ip=0.0.0.0 --allow-root --port 8888 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "jlab":
 			cmds += [
-				base_run("oneoffcoder/java-jupyter", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
+				base_run("oneoffcoder/java-jupyter", ["8675"], None,None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "gclone": #dock.sh -x frun -d alpine/git:latest --baredocker -c clone https://github.com/franceme/franceme.github.io /sync/franceme.github.io
 			for arg in args.cmd:
 				cmds += [
-					base_run("alpine/git:latest", args.ports, None,None, args.mount, args.dind, f"clone {arg} {args.mount}/{arg.split('/')[-1]}",args,baredocker=False)
+					base_run("alpine/git:latest", args.ports, None,None, args.mount, args.dind, f"clone {arg} {args.mount}/{arg.split('/')[-1]}",args,baredocker=False, mac=args.mac)
 				]
 		if _cmd_string == "lab":
 			cmds += [
-				base_run("frantzme/pythondev:latest", ["8675"], None, None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker)
+				base_run("frantzme/pythondev:latest", ["8675"], None, None, args.mount, args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8675 --notebook-dir=\"/sync/\"",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "sos":
 			cmds += [
-				base_run("vatlab/sos-notebook", ["8678"], None, None, "/home/jovyan/work", args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8678",args,baredocker=args.baredocker)
+				base_run("vatlab/sos-notebook", ["8678"], None, None, "/home/jovyan/work", args.dind, f"jupyter lab --ip=0.0.0.0 --allow-root --port 8678",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "polynote":
 			#https://github.com/polynote/polynote/blob/master/docker/README.md
 			cmds += [
-				base_run("polynote/polynote:latest", ["8192"], None, None, "data", args.dind, f"-p 127.0.0.1:8192:8192 -p 127.0.0.1:4040-4050:4040-4050",args,baredocker=args.baredocker)
+				base_run("polynote/polynote:latest", ["8192"], None, None, "data", args.dind, f"-p 127.0.0.1:8192:8192 -p 127.0.0.1:4040-4050:4040-4050",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "polynote2":
 			cmds += [
-				base_run("xtreamsrl/polynote-docker", ["8192"],None, args.detach,"/data", args.dind, args.cmd,args,baredocker=args.baredocker)
+				base_run("xtreamsrl/polynote-docker", ["8192"],None, args.detach,"/data", args.dind, args.cmd,args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "cmd":
 			cmds += [
-				base_run(args.docker[0], args.ports, None, None, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker)
+				base_run(args.docker[0], args.ports, None, None, args.mount, args.dind, ' '.join(args.cmd),args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "qodana-jvm":
 			output_results = "qodana_jvm_results"
@@ -403,27 +407,27 @@ if __name__ == '__main__':
 				pass
 
 			cmds += [
-				base_run("jetbrains/qodana-jvm", ["8080"], f"-v \"{output_results}:/data/results/\"  --show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
+				base_run("jetbrains/qodana-jvm", ["8080"], f"-v \"{output_results}:/data/results/\"  --show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "qodana-py":
 			cmds += [
-				base_run("jetbrains/qodana-python:2022.1-eap", ["8080"], "--show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
+				base_run("jetbrains/qodana-python:2022.1-eap", ["8080"], "--show-report", "/data/project/", args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "splunk":
 			cmds += [
-				base_run("splunk/splunk:latest", ["8000"], "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'",None, args.mount, args.dind, "start",args,baredocker=args.baredocker)
+				base_run("splunk/splunk:latest", ["8000"], "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'",None, args.mount, args.dind, "start",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "beaker":
 			cmds += [
-				base_run("beakerx/beakerx", ["8888"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
+				base_run("beakerx/beakerx", ["8888"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "superset":
 			cmds += [
-				base_run("apache/superset:latest", ["8088"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
+				base_run("apache/superset:latest", ["8088"], None, args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string == "mysql":
 			cmds += [
-				base_run("mysql:latest", ["3306"], "-e MYSQL_ROOT_PASSWORD=root", args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker)
+				base_run("mysql:latest", ["3306"], "-e MYSQL_ROOT_PASSWORD=root", args.detach, args.mount, args.dind, "/bin/bash",args,baredocker=args.baredocker, mac=args.mac)
 			]
 		if _cmd_string in ["load","pull"]:
 			cmds += [
