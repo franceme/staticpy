@@ -9,15 +9,14 @@ yes|apt install wget curl zlib1g-dev libreadline-gplv2-dev libncurses5-dev libss
 #https://linuxize.com/post/how-to-install-python-3-8-on-debian-10/
 
 echo "Downloading Python3"
-wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
+wget https://www.python.org/ftp/python/3.8.15/Python-3.8.15.tar.xz
 
 echo "Extracting the zip"
-tar -xvf Python-3.8.12.tar.xz
-cd Python-3.8.12 && ./configure && make && make install
+tar -xvf Python-3.8.15.tar.xz
+cd Python-3.8.15 && ./configure && make && make install
 
 sleep 1m
 
 echo "Getting PIP"
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 sleep 1m
-echo Python-3.8.12/python get-pip.py
+Python-3.8.15/python <(curl https://bootstrap.pypa.io/get-pip.py)
