@@ -16,6 +16,24 @@ import subprocess
 import platform
 import socket
 
+def cmd(cmd,display=True, lines=False):
+	output_contents = ""
+	if display:
+		print(cmd)
+	process = subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=1,encoding='utf-8', universal_newlines=True, close_fds=True)
+	while True:
+		out = process.stdout.readline()
+		if out == '' and process.poll() != None:
+			break
+		if out != '':
+			if display:
+				sys.stdout.write(out)
+			output_contents += out
+			sys.stdout.flush()
+	if not lines:
+		return output_contents
+	return [x for x in output_contents.split('\n') if x.strip() != '']
+
 """
 sample forcing a docker container to run as su
 docker run --rm -u 0 -it -v `pwd`:/temp username/dockername
