@@ -88,8 +88,6 @@ if False:
 		def __cmd(self,string):
 			return str(subprocess.check_output(string, shell=True, text=True)).strip()
 
-	
-
 def run(cmd):
 	return str(subprocess.check_output(cmd, shell=True, text=True)).strip()
 
@@ -168,7 +166,29 @@ def getArgs():
 	args = parser.parse_args()
 	return args 
 
-def clean(args):
+def flatten_list(lyst: list) -> list:
+	if not lyst:
+		return []
+
+	big_list = len(lyst) > 1
+	if isinstance(lyst[0], list):
+		return flatten_list(lyst[0]) + (big_list * flatten_list(lyst[1:]))
+	else:
+		return [lyst[0]] + (big_list * flatten_list(lyst[1:]))
+
+def duel_cmd(first_cmd, second_cmd):
+	global docker
+	output = []
+
+	for image in cmd("{0} {1}".format(docker, first_cmd), lines=True, display=False):
+		output += [
+			"{0} {1} {2}".format(docker, second_cmd, image)
+		]
+
+	#cmds.append(duel_cmd("images -q","rmi"))
+	return output
+
+def clean_old(args):
 	global docker
 
 	return [
@@ -180,6 +200,38 @@ def clean(args):
 			f"{docker} image prune -f",
 			f"{docker} container prune -f",
 			f"{docker} builder prune -f -a"
+	]
+
+def clean():
+	global docker
+
+	output = []
+	for (x,y) in [
+		("ps -a -q","kill"),
+		("ps -q","kill"),
+		("ps -a -q","rm"),
+		("images -q","rmi"),
+		("volume ls -q","volume rm"),
+	]:
+		output.append(duel_cmd(x,y))
+
+	output += [
+			f"{docker} image prune -f",
+			f"{docker} container prune -f",
+			f"{docker} builder prune -f -a"
+	]
+
+	return output
+
+def lyst():
+	global docker
+
+	return [
+		f"{docker} ps -a -q",
+		f"{docker} ps -q",
+		f"{docker} ps -a -q",
+		f"{docker} images -q",
+		f"{docker} volume ls -q",
 	]
 
 def base_run(dockerName, ports=[], flags="", detatched=False, mount="/sync", dind=False, cmd="/bin/bash", args=None, baredocker=False, mac=None):
@@ -309,7 +361,9 @@ if __name__ == '__main__':
 			update()
 			sys.exit(1)
 		if _cmd_string in ["clean","frun"]:
-			cmds += clean(args)
+			cmds += clean()
+		if _cmd_string in ["list"]:
+			cmds += lyst()
 		if _cmd_string == "update":
 			try:
 				import requests
@@ -452,18 +506,18 @@ if __name__ == '__main__':
 				f"{docker} pull {getDockerImage(args.docker[0],args.baredocker)}"
 			]
 		if _cmd_string in ["clean","frun"]:
-			cmds += clean(args)
+			cmds += clean()
 		if _cmd_string == "stop":
 			cmds += [f"{docker} kill $({docker} ps -a -q)"]
 		if _cmd_string == "list":
-			cmds = [f"{docker} images"]
+			cmds += [f"{docker} images"]
 		if _cmd_string == "live":
-			cmds = [f"{docker} ps|awk '{{print $1, $3}}'"]
+			cmds += [f"{docker} ps|awk '{{print $1, $3}}'"]
 		if _cmd_string == "update":
 			containerID = run(f"{docker} ps |awk '{{print $1}}'|tail -1")
 			imageID = run(f"{docker} ps |awk '{{print $2}}'|tail -1")
 
-			cmds = [
+			cmds += [
 				f"{docker} commit {containerID} {imageID}",
 				f"{docker} push {imageID}"
 			]		
@@ -473,9 +527,9 @@ if __name__ == '__main__':
 				sys.exit(0)
 
 			dockerName = getDockerImage(sys.argv[2].strip(),args.baredocker).replace(':latest', '')
-			cmds = [
-				f"{docker} kill $({docker} ps |grep {getDockerImage(dockerName,args.baredocker)}|awk '{{print $1}}')",
-				f"{docker} rmi $(docker images |grep {dockerName}|awk '{{print $3}}')"
+			cmds += [
+				duel_cmd(f"ps |grep {getDockerImage(dockerName,args.baredocker)}|awk '{{print $1}}'","kill"),
+				duel_cmd(f"docker images |grep {dockerName}|awk '{{print $3}}'","rmi")
 			]
 		if _cmd_string in ["loads","pulls"]:
 			for load in args.docker:
@@ -486,10 +540,14 @@ if __name__ == '__main__':
 				f"{docker} logout"
 			]
 
+	cmds = flatten_list(cmds)
+	print(cmds)
 	for x in cmds:
 		try:
 			print(f"> {x}")
 			if args.execute:
-				os.system(x)
+				try:
+					os.system(x)
+				except: pass
 		except:
 			pass
