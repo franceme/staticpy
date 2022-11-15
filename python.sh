@@ -22,11 +22,11 @@ sleep 1m
 
 wget https://bootstrap.pypa.io/get-pip.py
 { # try
-    Python-3.8.15/python get-pip.py &&
+    Python-3.8.15/python get-pip.py
 } || { # catch
 }
 {
-    python get-pip.py &&
+    python get-pip.py
 } || { # catch
     # save log for exception 
 }
