@@ -69,6 +69,7 @@ def getArgs():
 	parser.add_argument("--upload",help="Upload the file", nargs="?", default=None)
 	parser.add_argument("--download",help="Download the file", nargs="?", default=None)
 	parser.add_argument("--sdel", help="Delete the file (only for the upload/download)",action='store_true',default=False)
+	parser.add_argument("--sudo", help="Prefix Sudo to the commands",action='store_true',default=False)
 	parser.add_argument("--jupyter", help="Run JupyterLab",action='store_true',default=False)
 	parser.add_argument("--splunk", help="Run Splunk",action='store_true',default=False)
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
@@ -101,6 +102,10 @@ def up(remote,file):
 if __name__ == '__main__':
 	args = getArgs()
 
+	prefix = ""
+	if args.sudo:
+		prefix += " sudo "
+	
 	if args.foil and os.path.exists(args.foil):
 		import json
 		with open(args.foil,'r') as reader:
@@ -118,15 +123,15 @@ if __name__ == '__main__':
 			computer['port'] = args.ssh
 
 		if args.jupyter:
-			args.cmd = "sudo jupyter lab --allow-root".split()
+			args.cmd = prefix + " jupyter lab --allow-root".split()
 			args.ports += ["8888"]
 		elif args.splunk:
-			args.cmd = f"sudo docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest".split()
+			args.cmd = prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest".split()
 			args.ports += ["8000"]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
 			sys.exit(0)
-			args.cmd = "apt-get install virtual-box vagrant".split()
+			args.cmd = prefix + "apt-get install virtual-box vagrant".split()
 			args.ports += ["8000"]
 		elif args.pyqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-python-docker-readme.html#b920fd1
@@ -138,7 +143,7 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			args.cmd = f"sudo docker run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}".split()
+			args.cmd = prefix + f" docker run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}".split()
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
 			args.jqodana = os.path.abspath(args.jqodana)
@@ -149,14 +154,14 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			args.cmd = f"sudo docker run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
+			args.cmd = prefix + f" docker run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
 		elif args.pycharm:
 			#https://stackoverflow.com/questions/28717464/docker-expose-all-ports-or-range-of-ports-from-7000-to-8000
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
-			args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest".split()
+			args.cmd = prefix + f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest".split()
 		elif args.intellij:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
-			args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest".split()
+			args.cmd = prefix + f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest".split()
 
 		if args.download:
 			cmds += [down(computer, args.download)]
