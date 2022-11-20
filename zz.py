@@ -74,6 +74,7 @@ def getArgs():
 	parser.add_argument("--splunk", help="Run Splunk",action='store_true',default=False)
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
 	parser.add_argument("--pycharm", help="Run PyCharm",nargs="?", default=None)
+	parser.add_argument("--datagrip", help="Run DataGrip",nargs="?", default=None)
 	parser.add_argument("--intellij", help="Run Intellij",nargs="?", default=None)
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
@@ -162,6 +163,9 @@ if __name__ == '__main__':
 		elif args.intellij:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
 			args.cmd = f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest".split()
+		elif args.datagrip:
+			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
+			args.cmd = f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest".split()
 
 		if args.download:
 			cmds += [down(computer, args.download)]
