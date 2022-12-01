@@ -72,6 +72,7 @@ def getArgs():
 	parser.add_argument("--sudo", help="Prefix Sudo to the commands",action='store_true',default=False)
 	parser.add_argument("--jupyter", help="Run JupyterLab",action='store_true',default=False)
 	parser.add_argument("--splunk", help="Run Splunk",action='store_true',default=False)
+	parser.add_argument("--sdock", help="Run Docker as Sudo",action="store_true",default=False)
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
 	parser.add_argument("--pycharm", help="Run PyCharm",nargs="?", default=None)
 	parser.add_argument("--datagrip", help="Run DataGrip",nargs="?", default=None)
@@ -119,6 +120,8 @@ if __name__ == '__main__':
 	else:
 		working_computers = [computers[args.name[0]]]
 
+	sdock = "sudo docker" if args.sdock else "docker"
+
 	for computer in working_computers:
 		if args.ssh is not None:
 			computer['port'] = args.ssh
@@ -144,7 +147,7 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			args.cmd = f" docker run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}".split()
+			args.cmd = f" {sdock} run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}".split()
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
 			args.jqodana = os.path.abspath(args.jqodana)
@@ -155,17 +158,17 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			args.cmd = f" docker run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
+			args.cmd = f" {sdock} run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}".split()
 		elif args.pycharm:
 			#https://stackoverflow.com/questions/28717464/docker-expose-all-ports-or-range-of-ports-from-7000-to-8000
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
-			args.cmd = f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest".split()
+			args.cmd = f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest".split()
 		elif args.intellij:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
-			args.cmd = f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest".split()
+			args.cmd = f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest".split()
 		elif args.datagrip:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
-			args.cmd = f" docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest".split()
+			args.cmd = f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest".split()
 
 		if args.download:
 			cmds += [down(computer, args.download)]
