@@ -79,6 +79,7 @@ def getArgs():
 	parser.add_argument("--intellij", help="Run Intellij",nargs="?", default=None)
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
+	parser.add_argument("--blender", help="Run Blender",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
 	return parser.parse_args()
 
@@ -132,6 +133,9 @@ if __name__ == '__main__':
 		elif args.splunk:
 			args.cmd = prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest".split()
 			args.ports += ["8000"]
+		elif args.blender:
+			args.cmd = prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest".split()
+			args.ports += ["3000"]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
 			sys.exit(0)
