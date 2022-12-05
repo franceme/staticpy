@@ -80,6 +80,8 @@ def getArgs():
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
 	parser.add_argument("--blender", help="Run Blender",action='store_true',default=False)
+	parser.add_argument("--hoppscotch", help="Run HoppScotch",action='store_true',default=False)
+	parser.add_argument("--postman", help="Run HoppScotch (alias for postman)",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
 	return parser.parse_args()
 
@@ -135,6 +137,9 @@ if __name__ == '__main__':
 			args.ports += ["8000"]
 		elif args.blender:
 			args.cmd = prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest".split()
+			args.ports += ["3000"]
+		elif args.hoppscotch or args.postman:
+			args.cmd = prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest".split()
 			args.ports += ["3000"]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
