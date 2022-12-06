@@ -79,6 +79,7 @@ def getArgs():
 	parser.add_argument("--intellij", help="Run Intellij",nargs="?", default=None)
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
+	parser.add_argument("--reverse", help="Create a Dockerfile from the Image",nargs="?", default=None)
 	parser.add_argument("--blender", help="Run Blender",action='store_true',default=False)
 	parser.add_argument("--hoppscotch", help="Run HoppScotch",action='store_true',default=False)
 	parser.add_argument("--postman", help="Run HoppScotch (alias for postman)",action='store_true',default=False)
@@ -142,6 +143,8 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
 			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
 			args.ports += ["3000"]
+		elif args.reverse:
+			cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
 			sys.exit(0)
