@@ -339,7 +339,7 @@ if __name__ == '__main__':
 		os.system("yes|apt-get install docker.io")
 
 	if "--short1" in ''.join(sys.argv):
-		sys.argv = "zz.py -n self -x run -d dev:lite --Login -p 8887 8888 8912 8899 --dind -c".split(" ") + ["\"/bin/cmd jupyterlab;/bin/cmd vs;/bin/cmd ipy;apt-get install docker.io -y\""]
+		sys.argv = "zz.py -n self -x run -d dev:lite --Login -p 8887 8888 8912 8899 --dind -c".split(" ") + ["/bin/cmd jupyterlab;/bin/cmd vs;/bin/cmd ipy;apt-get install docker.io -y"]
 
 	if '--shebang' in ''.join(sys.argv):
 		sys.argv = ' '.join(sys.argv[:-1]).split(' ')
