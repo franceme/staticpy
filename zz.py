@@ -140,7 +140,7 @@ if __name__ == '__main__':
 			args.ports += ["3000"]
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
-			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -e VNC_PW=password kasmweb/insomnia:1.12.0"]
+			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
 			args.ports += ["3000"]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
