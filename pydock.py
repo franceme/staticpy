@@ -162,6 +162,7 @@ def getArgs():
 	parser.add_argument("--Logout", help="Logout", action="store_true",default=False)
 	parser.add_argument("--Logg", help="Login and Logout", action="store_true",default=False)
 	parser.add_argument("--execute", help="Execute the script (default is True)", action="store_false",default=True)
+	parser.add_argument("--short1", help="Short Alias 1", action="store_true",default=False)
 	#args,unknown = parser.parse_known_args()
 	args = parser.parse_args()
 	return args 
@@ -336,6 +337,9 @@ def set_docker(sudo=False):
 if __name__ == '__main__':
 	if not os.path.exists('/usr/bin/docker') and not os.path.exists("/usr/local/bin/docker"):
 		os.system("yes|apt-get install docker.io")
+
+	if "--short1" in ''.join(sys.argv):
+		sys.argv = "zz.py -n self -x run -d dev:lite --Login -p 8887 8888 8912 8899 --dind -c".split(" ") + ["\"/bin/cmd jupyterlab;/bin/cmd vs;/bin/cmd ipy;apt-get install docker.io -y\""]
 
 	if '--shebang' in ''.join(sys.argv):
 		sys.argv = ' '.join(sys.argv[:-1]).split(' ')
