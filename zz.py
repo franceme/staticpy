@@ -81,6 +81,8 @@ def getArgs():
 	parser.add_argument("--jqodana", help="Run Java Qodana",nargs="?", default=None)
 	parser.add_argument("--reverse", help="Create a Dockerfile from the Image",nargs="?", default=None)
 	parser.add_argument("--blender", help="Run Blender",action='store_true',default=False)
+	#https://docs.firefly-iii.org/firefly-iii/installation/docker/
+	parser.add_argument("--firefly", help="Run Firefly 3",action='store_true',default=False)
 	parser.add_argument("--hoppscotch", help="Run HoppScotch",action='store_true',default=False)
 	parser.add_argument("--postman", help="Run HoppScotch (alias for postman)",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
@@ -139,6 +141,9 @@ if __name__ == '__main__':
 		elif args.blender:
 			cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
 			args.ports += ["3000"]
+		elif args.firefly:
+			cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
+			args.ports += ["8080"]
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
 			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
