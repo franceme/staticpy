@@ -147,7 +147,11 @@ if __name__ == '__main__':
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
 			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
-			args.ports += ["3000"]
+			args.ports += ["3000"] #docker pull linuxserver/blender
+		elif False: #args.blender:
+			cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
+			args.ports += ["3000"] 
+			sys.exit(0)
 		elif args.reverse:
 			cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
 		elif args.vagrant:
