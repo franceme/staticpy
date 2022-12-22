@@ -148,7 +148,7 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
 			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
 			args.ports += ["3000"] #docker pull linuxserver/blender
-		elif False: #args.blender:
+		elif False: #args.blender:https://hub.docker.com/u/linuxserver
 			cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
 			args.ports += ["3000"] 
 			sys.exit(0)
