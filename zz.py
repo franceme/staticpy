@@ -39,29 +39,6 @@ def dir_of(path):
 
 cur_dir = lambda:dir_of(os.curdir)
 
-def open_port():
-	"""
-	https://gist.github.com/jdavis/4040223
-	"""
-	sock = socket.socket()
-	sock.bind(('', 0))
-	x, port = sock.getsockname()
-	sock.close()
-
-	return port
-
-def checkPort(port):
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	result = bool(sock.connect_ex(('127.0.0.1', int(port))))
-	sock.close()
-	return result
-
-def try_port(port):
-	if checkPort(port):
-		return port
-	else:
-		return open_port()
-
 remote_file = lambda remote,file:  file.strip().replace('__/','/home/' + remote['user'] + '/Downloads/').replace('_/', '/home/' + remote['user'] + '/').strip()
 
 def getArgs():
@@ -138,9 +115,12 @@ if __name__ == '__main__':
 		if args.ssh is not None:
 			computer['port'] = args.ssh
 
+		bare_run = True
+
 		if args.jupyter:
 			cmds += [" jupyter lab --allow-root"]
 			args.ports += ["8888"]
+			bare_run &= False
 		elif args.splunk:
 			#cmds += [prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest"]
 			#args.ports += ["8000"]
@@ -167,6 +147,7 @@ if __name__ == '__main__':
 					extra = "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'"
 				)
 			]
+			bare_run &= False
 		elif args.blender:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
 			#args.ports += ["3000"]
@@ -193,6 +174,7 @@ if __name__ == '__main__':
 					extra = None
 				).string()
 			]
+			bare_run &= False
 		elif args.firefly:
 			#cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
 			#args.ports += ["8080"]
@@ -219,6 +201,7 @@ if __name__ == '__main__':
 					extra = "-e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME"
 				).string()
 			]
+			bare_run &= False
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
 			#cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
@@ -246,9 +229,11 @@ if __name__ == '__main__':
 					extra = "--shm-size=512m -e VNC_PW=password"
 				).string()
 			]
+			bare_run &= False
 		elif False: #args.blender:https://hub.docker.com/u/linuxserver
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
 			#args.ports += ["3000"] 
+			bare_run &= False
 			sys.exit(0)
 		elif args.reverse:
 			#cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
@@ -275,8 +260,10 @@ if __name__ == '__main__':
 					extra = args.reverse
 				).string()
 			]
+			bare_run &= False
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
+			bare_run &= False
 			sys.exit(0)
 			#cmds += [prefix + "apt-get install virtual-box vagrant"]
 			#args.ports += ["8000"]
@@ -314,6 +301,7 @@ if __name__ == '__main__':
 					extra = f"-v {args.results}/:/data/results/"
 				).string() + f"&& mv {args.results} {args.pyqodana}"
 			]
+			bare_run &= False
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
 			args.jqodana = os.path.abspath(args.jqodana)
@@ -348,6 +336,7 @@ if __name__ == '__main__':
 					extra = f"-v {args.results}/:/data/results/"
 				).string() + f"&& mv {args.results} {args.jqodana}"
 			]
+			bare_run &= False
 		elif args.pycharm:
 			#https://stackoverflow.com/questions/28717464/docker-expose-all-ports-or-range-of-ports-from-7000-to-8000
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
@@ -375,6 +364,7 @@ if __name__ == '__main__':
 					extra = None
 				).string()
 			]
+			bare_run &= False
 		elif args.intellij:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
 			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest"]
@@ -401,6 +391,7 @@ if __name__ == '__main__':
 					extra = None
 				).string()
 			]
+			bare_run &= False
 
 		elif args.datagrip:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
@@ -428,6 +419,8 @@ if __name__ == '__main__':
 					extra = None
 				).string()
 			]
+			bare_run &= False
+		print(bare_run)
 
 
 		if args.download:
@@ -436,18 +429,22 @@ if __name__ == '__main__':
 				cmds += [
 					run(computer,f" \" yes|rm {remote_file(computer,args.download)} \"").replace('-t','')
 				]
+			bare_run &= False
 		elif args.upload:
 			cmds += [up(computer, args.upload)]
 			if args.sdel:
 				cmds += [
 					f"yes|rm {args.upload}"
 				]
+			bare_run &= False
 		else:
+			print("HIT")
 			ports = ""
 			for port in set(args.ports):
 				ports += f" -L {sdock.getPort(port)}:{computer['ip']}:{port} "
 
 			cmds += [run(computer,' '.join(args.cmd), ports)]
-
+		
+	print(cmds)
 	for x in cmds:
 		print(x);os.system(x)
