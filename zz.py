@@ -420,7 +420,6 @@ if __name__ == '__main__':
 				).string()
 			]
 			bare_run &= False
-		print(bare_run)
 
 
 		if args.download:
@@ -437,14 +436,12 @@ if __name__ == '__main__':
 					f"yes|rm {args.upload}"
 				]
 			bare_run &= False
-		else:
-			print("HIT")
+		elif bare_run:
 			ports = ""
 			for port in set(args.ports):
 				ports += f" -L {sdock.getPort(port)}:{computer['ip']}:{port} "
 
 			cmds += [run(computer,' '.join(args.cmd), ports)]
-		
-	print(cmds)
+
 	for x in cmds:
 		print(x);os.system(x)
