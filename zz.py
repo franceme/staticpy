@@ -14,6 +14,12 @@ import subprocess
 import platform
 import socket
 
+try:
+	import sdock
+except:
+	os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
+	import sdock
+
 '''####################################
 #The main runner of this file, intended to be ran from
 '''####################################
@@ -126,7 +132,7 @@ if __name__ == '__main__':
 	else:
 		working_computers = [computers[args.name[0]]]
 
-	sdock = "sudo docker" if args.sdock else "docker"
+	#sdock = "sudo docker" if args.sdock else "docker"
 
 	for computer in working_computers:
 		if args.ssh is not None:
@@ -136,29 +142,144 @@ if __name__ == '__main__':
 			cmds += [" jupyter lab --allow-root"]
 			args.ports += ["8888"]
 		elif args.splunk:
-			cmds += [prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest"]
-			args.ports += ["8000"]
+			#cmds += [prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest"]
+			#args.ports += ["8000"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "splunk/splunk:latest",
+					ports = [8000],
+					cmd = None,
+					dind = False,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/sync",
+					mountfrom = f"/home/{computer['user']}",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = "-e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password'"
+				)
+			]
 		elif args.blender:
-			cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
-			args.ports += ["3000"]
+			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
+			#args.ports += ["3000"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "linuxserver/blender:latest",
+					ports = [3000],
+					cmd = None,
+					dind = False,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/sync",
+					mountfrom = f"/home/{computer['user']}",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				)
+			]
 		elif args.firefly:
-			cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
-			args.ports += ["8080"]
+			#cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
+			#args.ports += ["8080"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "fireflyiii/core:latest",
+					ports = [8080],
+					cmd = None,
+					dind = False,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/var/www/html/storage/upload",
+					mountfrom = f"/home/{computer['user']}",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = "-e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME"
+				)
+			]
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
-			cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
-			args.ports += ["3000"] #docker pull linuxserver/blender
+			#cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
+			#args.ports += ["3000"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "kasmweb/insomnia:1.12.0",
+					ports = [6901],
+					cmd = None,
+					dind = False,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/sync",
+					mountfrom = f"/home/{computer['user']}",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = "--shm-size=512m -e VNC_PW=password"
+				)
+			]
 		elif False: #args.blender:https://hub.docker.com/u/linuxserver
-			cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
-			args.ports += ["3000"] 
+			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
+			#args.ports += ["3000"] 
 			sys.exit(0)
 		elif args.reverse:
-			cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
+			#cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
+			cmds += [f"docker pull {args.reverse} && " + 
+				sdock.sdock(
+					docker = "docker",
+					image = "ghcr.io/laniksj/dfimage",
+					ports = [6901],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/sync",
+					mountfrom = f"/home/{computer['user']}",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = args.reverse
+				)
+			]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
 			sys.exit(0)
-			cmds += [prefix + "apt-get install virtual-box vagrant"]
-			args.ports += ["8000"]
+			#cmds += [prefix + "apt-get install virtual-box vagrant"]
+			#args.ports += ["8000"]
 		elif args.pyqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-python-docker-readme.html#b920fd1
 			args.pyqodana = os.path.abspath(args.pyqodana)
@@ -170,6 +291,29 @@ if __name__ == '__main__':
 			except:
 				pass
 			cmds += [f" {sdock} run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "ghcr.io/laniksj/dfimage",
+					ports = [6901],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/data/project/",
+					mountfrom = args.pyqodana,
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				)
+			]
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
 			args.jqodana = os.path.abspath(args.jqodana)
@@ -204,7 +348,7 @@ if __name__ == '__main__':
 				cmds += [
 					f"yes|rm {args.upload}"
 				]
-		else:
+		elif False:
 			ports = ""
 			for port in set(args.ports):
 				ports += f" -L {try_port(port)}:{computer['ip']}:{port} "
