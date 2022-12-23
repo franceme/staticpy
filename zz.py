@@ -442,10 +442,10 @@ if __name__ == '__main__':
 				cmds += [
 					f"yes|rm {args.upload}"
 				]
-		elif False:
+		else:
 			ports = ""
 			for port in set(args.ports):
-				ports += f" -L {try_port(port)}:{computer['ip']}:{port} "
+				ports += f" -L {sdock.getPort(port)}:{computer['ip']}:{port} "
 
 			cmds += [run(computer,' '.join(args.cmd), ports)]
 
