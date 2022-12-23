@@ -191,7 +191,7 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = None
-				)
+				).string()
 			]
 		elif args.firefly:
 			#cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
@@ -217,7 +217,7 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = "-e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME"
-				)
+				).string()
 			]
 		elif args.hoppscotch or args.postman:
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
@@ -244,7 +244,7 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = "--shm-size=512m -e VNC_PW=password"
-				)
+				).string()
 			]
 		elif False: #args.blender:https://hub.docker.com/u/linuxserver
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender"]
@@ -273,7 +273,7 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = args.reverse
-				)
+				).string()
 			]
 		elif args.vagrant:
 			print("Vagrant is not currently Setup and Ran")
@@ -290,11 +290,11 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			cmds += [f" {sdock} run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}"]
+			#cmds += [f" {sdock} run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}"]
 			cmds += [
 				sdock.sdock(
 					docker = "docker",
-					image = "ghcr.io/laniksj/dfimage",
+					image = "jetbrains/qodana-python",
 					ports = [6901],
 					cmd = None,
 					dind = True,
@@ -311,8 +311,8 @@ if __name__ == '__main__':
 					macaddress = None,
 					postClean = False,
 					preClean = False,
-					extra = None
-				)
+					extra = f"-v {args.results}/:/data/results/"
+				).string() + f"&& mv {args.results} {args.pyqodana}"
 			]
 		elif args.jqodana:
 			#https://www.jetbrains.com/help/qodana/qodana-jvm-community-docker-readme.html#quick-start-recommended-profile
@@ -324,17 +324,111 @@ if __name__ == '__main__':
 				watch_cmd(f"yes|rm -r {args.results}/")
 			except:
 				pass
-			cmds += [f" {sdock} run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}"]
+			#cmds += [f" {sdock} run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "jetbrains/qodana-jvm-community",
+					ports = [6901],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/data/project/",
+					mountfrom = args.jqodana,
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = f"-v {args.results}/:/data/results/"
+				).string() + f"&& mv {args.results} {args.jqodana}"
+			]
 		elif args.pycharm:
 			#https://stackoverflow.com/questions/28717464/docker-expose-all-ports-or-range-of-ports-from-7000-to-8000
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
-			cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest"]
+			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "frantzme/pycharm:latest",
+					ports = [8887],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/project/",
+					mountfrom = os.path.abspath(args.pycharm),
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
 		elif args.intellij:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
-			cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest"]
+			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "frantzme/pycharm:latest",
+					ports = [8887],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/project/",
+					mountfrom = os.path.abspath(args.intellij),
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
+
 		elif args.datagrip:
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
-			cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest"]
+			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest"]
+			cmds += [
+				sdock.sdock(
+					docker = "docker",
+					image = "frantzme/pycharm:latest",
+					ports = [8887],
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = False,
+					sudo = False,
+					remove = True,
+					mountto = "/project/",
+					mountfrom = os.path.abspath(args.datagrip),
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
+
 
 		if args.download:
 			cmds += [down(computer, args.download)]
