@@ -14,11 +14,8 @@ import subprocess
 import platform
 import socket
 
-try:
-	import sdock
-except:
-	os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
-	import sdock
+os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
+import sdock
 
 '''####################################
 #The main runner of this file, intended to be ran from
@@ -125,11 +122,12 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run -p 8000:8000 -v /home/{computer['user']}:/sync -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='password' splunk/splunk:latest"]
 			#args.ports += ["8000"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "splunk/splunk:latest",
 					ports = [8000],
 					cmd = None,
+					nocmd = True,
 					dind = False,
 					shared = False,
 					detach = False,
@@ -152,11 +150,12 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
 			#args.ports += ["3000"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "linuxserver/blender:latest",
 					ports = [3000],
 					cmd = None,
+					nocmd = True,
 					dind = False,
 					shared = False,
 					detach = False,
@@ -179,11 +178,12 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run -p 8080:8080 -e APP_KEY=CHANGEME_32_CHARS -e DB_HOST=CHANGEME -e DB_PORT=3306 -e DB_CONNECTION=mysql -e DB_DATABASE=CHANGEME -e DB_USERNAME=CHANGEME -e DB_PASSWORD=CHANGEME -v /home/{computer['user']}:/var/www/html/storage/upload fireflyiii/core:latest"]
 			#args.ports += ["8080"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "fireflyiii/core:latest",
 					ports = [8080],
 					cmd = None,
+					nocmd = True,
 					dind = False,
 					shared = False,
 					detach = False,
@@ -207,11 +207,12 @@ if __name__ == '__main__':
 			#cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
 			#args.ports += ["3000"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "kasmweb/insomnia:1.12.0",
 					ports = [6901],
 					cmd = None,
+					nocmd = True,
 					dind = False,
 					shared = False,
 					detach = False,
@@ -238,10 +239,11 @@ if __name__ == '__main__':
 		elif args.reverse:
 			#cmds += [prefix + f" docker pull {args.reverse} && {prefix} docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock --rm ghcr.io/laniksj/dfimage {args.reverse}"]
 			cmds += [f"docker pull {args.reverse} && " + 
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "ghcr.io/laniksj/dfimage",
 					ports = [6901],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
@@ -279,10 +281,11 @@ if __name__ == '__main__':
 				pass
 			#cmds += [f" {sdock} run --rm -it -v {args.pyqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-python && mv {args.results} {args.pyqodana}"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "jetbrains/qodana-python",
 					ports = [6901],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
@@ -314,10 +317,11 @@ if __name__ == '__main__':
 				pass
 			#cmds += [f" {sdock} run --rm -it -v {args.jqodana}/:/data/project/ -v {args.results}/:/data/results/ jetbrains/qodana-jvm-community && mv {args.results} {args.jqodana}"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "jetbrains/qodana-jvm-community",
 					ports = [6901],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
@@ -342,10 +346,11 @@ if __name__ == '__main__':
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
 			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "frantzme/pycharm:latest",
 					ports = [8887],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
@@ -369,10 +374,11 @@ if __name__ == '__main__':
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
 			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/intellij:latest"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "frantzme/pycharm:latest",
 					ports = [8887],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
@@ -397,10 +403,11 @@ if __name__ == '__main__':
 			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
 			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest"]
 			cmds += [
-				sdock.sdock(
+				sdock.dock(
 					docker = "docker",
 					image = "frantzme/pycharm:latest",
 					ports = [8887],
+					nocmd = True,
 					cmd = None,
 					dind = True,
 					shared = False,
