@@ -1,0 +1,1 @@
+wget https://github.com/cli/cli/releases/download/v2.22.1/gh_2.22.1_linux_amd64.deb -O /tmp/gh_install.deb && chmod 777 /tmp/gh_install.deb && dpkg -i /tmp/gh_install.deb && rm /tmp/gh_install.deb

@@ -1,0 +1,431 @@
+\usepackage[export]{adjustbox}
+\usepackage{listings}
+\usepackage{suffix}
+\usepackage{calc} %https://tex.stackexchange.com/questions/30081/how-can-i-sum-two-values-and-store-the-result-in-other-variable
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{soul}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{dirtytalk}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{graphicx}
+%\usepackage{ulem}
+\usepackage{framed}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage[acronym]{glossaries}
+\usepackage{glossaries-extra}
+\usepackage{algorithm}
+\usepackage{eqparbox}
+\newdimen{\algindent}
+\setlength\algindent{1.5em}          % algorithmic indent=1.5em
+\usepackage{xargs}      % Used for new commands with optional arguments
+\usepackage{color}      % Used for custom colors in comments
+\usepackage{xspace}     % Used for abbreviation spacing
+\usepackage{xpunctuate} % Used for abbreviation spacing
+%\usepackage[noend]{algpseudocode} %No Endif
+\usepackage{algpseudocode}
+\usepackage{todonotes}
+\usepackage{listings}
+\usepackage{pdfpages}
+\def\blankpage{%
+      \clearpage%
+      \thispagestyle{empty}%
+      \addtocounter{page}{-1}%
+      \null%
+      \clearpage}
+
+\def\algoSpace{
+\vspace*{.25\baselineskip}
+}
+
+\iffalse
+All the JSON gets converted to Latex through the following website:
+https://www.latex-tables.com/
+
+re-wrap the tables with the following section
+
+Use table* for two columns
+\newcommand{\CMDNAME}{
+\begin{table*}[!ht]
+    \centering
+    \caption{}
+    %HERE
+    \label{fig:rulescoveredgraph}
+    \end{table*}
+}
+
+Single Column
+\newcommand{\CMDNAME}{
+\begin{table}[!ht]
+    \centering
+    \caption{}
+    %HERE
+    \label{fig:rulescoveredgraph}
+    \end{table}
+}
+\fi
+%Spacing
+%http://www.emerson.emory.edu/services/latex/latex_119.html
+
+%\algnewcommand\algorithmicforeach{\textbf{for each}}
+%\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+%\algnewcommand\algorithmicendfor{\textbf{end for}}
+%\algdef{S}[ENDFOR]{EndFor}{\algorithmicendfor}
+
+%\usepackage{svg} %https://tex.stackexchange.com/questions/442077/is-it-possible-to-use-svg-images-with-overleaf
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+\newcommand{\inject}[2]{#2}
+\newcommand{\recall}{Recall}
+\WithSuffix\newcommand\recall*{\recall \espace}
+\newcommand{\precision}{Precision}
+\WithSuffix\newcommand\precision*{\precision \espace}
+\newcommand{\accuracy}{Accuracy}
+\WithSuffix\newcommand\accuracy*{\accuracy \espace}
+
+\newcommand{\preprintNotice}{\textcolor{red}{Preprint: Currently under review. Please do not redistribute.}}
+\newcommand{\sys}{StillUndecided}
+\newcommand{\ie}{{i.e.,}\xspace}
+\newcommand{\eg}{{e.g.,}\xspace}
+\newcommand{\etal}{{et~al\xperiod}\xspace}
+\newcommand{\aka}{{a.k.a.}\xspace}
+\newcommand{\etc}{{etc\xperiod}\xspace}
+
+%% Note: Commands for custom styling of participant quotes
+\newcommand{\myquote}[1]{\emph{``#1''}}                         % Italic text in quotation marks
+\newcommand{\myquoteparticipant}[2]{\emph{``#1''}~(#2)}         % Italic text in quotation marks AND P# with non-breaking space
+\newcommand{\mylongquote}[1]{\begin{quote}\emph{#1}\end{quote}} % Block quote in italics, no quotation marks or P#
+
+\newcommand{\twoline}[2]{\begin{tabular}[l]{l@{}l@{}}#1\\#2\\\end{tabular}}
+\newcommand{\threeline}[3]{\begin{tabular}[l]{l@{}l@{}l@{}}#1\\#2\\#3\\\end{tabular}}
+
+
+
+
+
+%% Note: Commands for custom styling of bold, inline paragraph headings
+\newcommand{\parHeading}[1]{\vspace{8px}\noindent{\textbf{#1}}}
+
+%% Note: Custom colors for in-paper comments
+\definecolor{lightpink}{RGB}{237,157,202}
+\definecolor{lightred}{RGB}{210,121,121}
+\definecolor{lightorange}{RGB}{230,170,50}
+\definecolor{lightgold}{RGB}{210,194,121}
+\definecolor{lightgreen}{RGB}{121,210,121}
+\definecolor{lightaqua}{RGB}{121,206,210}
+\definecolor{lightblue}{RGB}{121,124,210}
+\definecolor{lightpurple}{RGB}{153,102,255}
+\definecolor{red}{RGB}{178,34,34}
+\definecolor{gray}{RGB}{166,166,166}
+
+%% Note: General DO and cut commands
+%\newcommand{\do}[1]{\textcolor{red}{[TODO] \emph{#1}}}
+%\newcommand{\cut}[1]{\textcolor{red}{\st{#1}}}
+
+%% Note: Labeled in-paper comments for paper authors (with and without underlined text)
+\newcommandx{\guest}[3][1=]
+    {\setulcolor{lightorange}{\ul{#1}} \textcolor{lightorange} %% Usage: \guest[Underline]{Name}{Comment}
+    {[\textbf{#2:} #3]}}
+\newcommandx{\jane}[2][1=] 
+    {\setulcolor{lightgreen}{\ul{#1}} \textcolor{lightgreen}   %% Usage: \jane[(optionally) underline text]{With a comment.}
+    {[\textbf{Jane:} #2]}}
+    
+%% Note: Section status badges to label which sections are ready (or not) for feedback 
+\newcommand{\badge}[2]{\colorbox{#1}{\textcolor{white}{\textsc{#2}}}}
+\newcommand{\headerBadge}[2]{
+  \vspace{-15px}                  % Move badge into header
+  \hspace*{\fill}                 % Align badge right
+  \badge{#1}{#2}                  % Create badge
+  \vspace{4px}\linebreak\noindent % Spacing for first paragraph
+}
+\newcommand{\complete}{\headerBadge{lightpurple}{complete}}
+\newcommand{\feedbackProvided}{\headerBadge{lightgreen}{feedback provided}}
+\newcommand{\readyForFeedback}{\headerBadge{lightorange}{ready for feedback}}
+\newcommand{\underRevision}{\headerBadge{lightred}{actively under revision}}
+\newcommand{\incomplete}{\headerBadge{red}{missing or incomplete}}
+
+\setabbreviationstyle[acronym]{long-short}
+
+\newcommand{\RomanNumeral}[1]{\MakeLowercase{\romannumeral #1}}
+\newcommand{\RomanNumeralCaps}[1]{\MakeUppercase{\romannumeral #1}}
+
+\newacronym{http}{HTTP}{HyperText Transfer Protocol}
+\newacronym{iot}{IoT}{Internet of Things}
+
+\newacronym{https}{HTTPS}{HyperText Transfer Protocol Secure}
+\newacronym{ssl}{SSL}{Secure Socket Layers}
+\newacronym{xss}{XSS}{Cross Site Scripting}
+\newacronym{ca}{CA}{Certificate Authority}
+\newacronym{prng}{PRNG}{Pseudo Random Number Generator}
+\newacronym{qca}{QSCA}{Quasi Static Code Analysis}
+\newacronym{sca}{SCA}{Static Code Analysis}
+\newacronym{sha}{SHA}{Secure Hash Algorithm}
+\newacronym{dca}{DCA}{Dynamic Code Analysis}
+\newacronym{pbe}{PBE}{Password Based Encryption}
+\newacronym{tls}{TLS}{Transport Layer Security}
+\newacronym{mitm}{MiTM}{Man in the Middle}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{xml}{XML}{Extensible Markup Language}
+\newacronym{yaml}{YAML}{YAML Ain't Markup Language}
+\newacronym{csrf}{CSRF}{Cross-Site Request Forgery}
+\newacronym{ssrf}{SSRF}{Server-Side Request Forgery}
+\newacronym{dos}{DoS}{Denial of Service}
+\newacronym{ddos}{DDoS}{Distributed Denial of Service}
+\newacronym{jwt}{JWT}{Json Web Token}
+\newacronym{ldap}{LDAP}{Lightweight Directory Access Protocol}
+\newacronym{ecb}{ECB}{Electronic Codebook}
+\newacronym{api}{API}{Application Program Interface}
+\newacronym{cbc}{CBC}{Cipher Block Chaining}
+\newacronym{mcc}{MCC}{Mccabe Cyclomatic Complexity}
+\newacronym{aes}{AES}{Advanced Encryption Standard}
+\newacronym{rsa}{RSA}{Rivest-Shamir-Adleman}
+\newacronym{ast}{AST}{Abstract Syntax Tree}
+\newacronym{iast}{IAST}{Interactive Application Security Testing}
+\newacronym{soa}{SOA}{state-of-the-art}
+\newacronym{uast}{UAST}{Universal Abstract Syntax Tree}
+\newacronym{loc}{LoC}{Lines of Code}
+\newacronym{sloc}{SLoC}{Source Lines of Code}
+\newacronym{tp}{TP}{true positive}
+\newacronym{fp}{FP}{false positive}
+\newacronym{tn}{TN}{true negative}
+\newacronym{fn}{FN}{false negative}
+\newacronym{rce}{RCE}{Remote Code Execution}
+\newacronym{ssh}{SSH}{Secure Shell Protocol}
+\newacronym{sbom}{SBOM}{Software Bill Of Materials}
+\newacronym{des}{DES}{Data Encryption Standard}
+\newacronym{des3}{DES3}{Triple DES}
+\newacronym{dsa}{DSA}{Digital Signature Algorithm}
+\newacronym{csv}{CSV}{Comma Seperated Valutes}
+\newacronym{json}{JSON}{JavaScript Object Notation}
+\newacronym{url}{URL}{URL}
+\newacronym{orbs}{ORBS}{Observation-Based Slicing}
+\newacronym{mdw}{MDW}{Moving Deletion Window}
+\newacronym{qses}{QSES}{Quasi-Static Executable Slices}
+\newacronym{dll}{DLL}{Dynamically Linked Libraries}
+
+
+\iffalse
+USE THIS PACKAGE TO CHECK FOR UNUSED REFERENCES
+
+\usepackage{refcheck}
+
+ADD THIS LINE: \nocite{*}
+\fi
+
+\InputIfFileExists{Tables/tables}{
+	%File is imported
+}{
+	%File isn't imported
+}
+
+%https://tex.stackexchange.com/questions/82531/how-to-change-hyperlinks-color-lyx
+%Incase hyperlink colors aren't clear or black
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	urlcolor=black,
+	pdfauthor={ Miles Frantz },
+	pdftitle={ Miles Frantz - Paper Submission },
+	pdfsubject={ Miles Frantz - Paper Submission },
+	pdfkeywords={Static Code Analysis, Code Analysis, Dynamic Code Analysis}
+}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{backstep}{HTML}{29c52d}
+\definecolor{backsteptwo}{HTML}{0000ff}
+\definecolor{backstepthree}{HTML}{ff5aff}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\colorlet{stringcolour}{red!60!black}
+
+%https://tex.stackexchange.com/questions/587558/box-around-the-code
+%CODE LISTING :> \begin{lstlisting}[frame=single]
+\lstdefinestyle{mystyle}{
+        basicstyle=\ttfamily\footnotesize,
+        keywordstyle=\color{backsteptwo}\ttfamily,
+        otherkeywords={\%, \}, \{, \&, \|, self, True, False},
+        sensitive=true,
+        stringstyle=\color{stringcolour}\ttfamily,
+        commentstyle=\color{backstep}\ttfamily,
+        morecomment=[l][\color{backstep}]{\#},
+        breakatwhitespace=false,
+        emph={},
+        emphstyle=\color{backstepthree},
+        breaklines=true,
+        captionpos=b,
+        keepspaces=true,
+        numbers=left,
+        numbersep=2pt,
+        showspaces=false,
+        showstringspaces=false,
+        showtabs=false,
+        escapechar=@,
+        columns=fullflexible,
+        xleftmargin=0pt,
+        tabsize=1,
+        captionpos=b
+}
+\lstset{style=mystyle}
+
+%\begin{python}
+%\end
+
+%https://tex.stackexchange.com/questions/157389/how-to-center-column-values-in-a-table
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\def\anon{1}
+
+\if\anon0
+    \newcommand{\GitHub}{https://github.com/franceme/\MakeLowercase{\name}}
+    \newcommand{\PyPi}{https://pypi.org/project/\MakeLowercase{\name}}
+    \newcommand{\benchmarkGitHub}{https://github.com/franceme/\benchmark}
+\else
+    \newcommand{\GitHub}{https://github.com/\MakeLowercase{\name}/\MakeLowercase{\name}}
+    \newcommand{\PyPi}{}
+    \newcommand{\benchmarkGitHub}{https://github.com/\MakeLowercase{\name}/\benchmark}
+\fi
+
+\algnewcommand\LeftComment[2]{%
+\hspace{#1\algindent}$\triangleright$ \eqparbox{COMMENT}{#2} \hfill %
+}
+%\algnewcommand{\LeftComment}[1]{\Statex \(\triangleright\) #1}
+\newcommand{\hrulealg}[0]{\vspace{1mm} \hrule \vspace{1mm}}
+
+\newcommand{\cut}[1]{\sout{\textcolor{red}{#1}}}
+\newcommand{\espace}{\hspace{0.25em}}
+\newcommand{\q}[1]{``#1''}
+\newcommand{\cmt}[1]{}
+\newcommand{\selfrep}[1]{\hyperref[#1]{#1}}
+\newcommand{\qq}[1]{`#1'}
+\newcommand{\acro}[1]{\textbf{\underline{#1}}}
+\newcommand{\loref}[1]{\footnote{\href{#1}}}
+\newcommand{\ts}{\textsuperscript}
+\newcommand{\citeref}[2]{#1 \footnote{\href{#1}{#2}}}
+\newcommand{\citeacro}[2]{#1 \ref{key:#1}}
+\newcommand{\img}[1]{Imgs/#1}
+\newcommand{\Code}[1]{code/#1}
+
+
+\def\iz|#1#2|{\underline{#1}#2}
+\newcommand{\lstBug}{\includegraphics[scale=.015]{\img{bug.png}}}
+\newcommand{\lstCheckMark}{\includegraphics[scale=.015]{\img{checkmark.png}}}
+\newcommand{\lstRightArrow}{\includegraphics[scale=.040]{\img{right_arrow.png}}}
+\newcommand{\lstRedRightArrow}{\includegraphics[scale=.040]{\img{red_right_arrow.png}}}
+\newcommand{\lstGreenCheckMark}{\includegraphics[scale=.040]{\img{green_checkmark.png}}}
+\newcommand{\ghostSection}[1]{\smallskip\noindent\textbf{#1}}
+
+\newcommand{\mybib}[1]{
+	\bibliographystyle{IEEEtran}
+	\bibliography{#1}
+}
+
+\newcommand{\mybibno}[1]{
+	\nocite{*}
+	\bibliographystyle{IEEEtran}
+	\bibliography{#1}
+}
+
+%https://tex.stackexchange.com/questions/542536/how-can-i-output-only-the-first-letter-of-the-argument-of-a-command
+\def\firstWord#1#2@{#1}
+\def\restWord#1#2@{#2}
+\newcommand{\showAbbreviation}[1]{\MakeUppercase{\underline{\firstWord#1@}}\MakeLowercase{\restWord#1@}}
+
+\iffalse
+it's is a contraction, meaning it is, it's going to rain
+its is possessive, belonging to or a quality of it, its color is red
+its' does not exist
+
+
+A module is a set of functions, types, classes, ... put together in a common namespace.
+
+A library is a set of modules which makes sense to be together and that can be used in a program or another library.
+
+A package is a unit of distribution that can contain a library or an executable or both. It's a way to share your code with the community.
+
+
+
+#######> Example latex usage
+
+If based on anony or not
+\name\if\anon0\footnote{Available from PyPi at \selfrep{\PyPi}}\fi\footnote{The source code available from GitHub at \selfrep{\GitHub}}
+
+Source Code
+\begin{figure}[H]
+    \centering\hspace*{-0.75in}
+    	\begin{lstlisting}[language=Python,escapechar=@,caption={The curry programming pattern for Python. The underlined code is inserted in a new copy of the AST.}, captionpos=b,label={lst:python_curry}]
+    def top_call(num):
+    	@\underline{num = 25} \label{curry_lsting:num_infer}@
+    
+    	def sub_call(sub_num): 
+    		@\bug@ @\underline{sub\_num = 4} \label{curry_lsting:sub_num_infer}@
+    		return sub_num * num
+    
+    	return sub_call
+    
+    overhead = top_call(25) @\label{curry_lsting:top_method_call}@
+    overhead(4) @\label{curry_lsting:bottom_method_call}@
+    \end{lstlisting}
+\end{figure}
+
+Referencing source code line		
+\ref{curry_lsting:top_method_call}
+
+Pulling Information from a raw source code
+\begin{figure}[H]
+    \centering\hspace*{-0.75in}
+        \lstinputlisting[language=Python,escapechar=@,caption={The curry programming pattern for Python. The underlined code is inserted in a new copy of the AST.}, captionpos=b,label={lst:python_curry},firstline=XXX,lastline=XXX]{Code/Licma.py}
+\end{figure}
+
+A kind of section
+\ghostSection{Builder}
+
+Algorithms
+%https://tex.stackexchange.com/questions/435617/glossaries-expand-acronyms-for-first-time-use-within-each-chapter
+
+\begin{algorithm}
+    \caption{The program flow of \name.} \label{algo:ProgramFlow}
+    \begin{algorithmic}[1]
+        \Procedure{MyProcedure}{}
+        \State $\textit{stringlen} \gets \text{length of }\textit{string}$
+        \State $i \gets \textit{patlen}$
+        \BState \emph{top}:
+        \If {$i > \textit{stringlen}$} \Return false
+        \EndIf
+        \State $j \gets \textit{patlen}$
+        \BState \emph{loop}:
+        \If {$\textit{string}(i) = \textit{path}(j)$}
+        \State $j \gets j-1$.
+        \State $i \gets i-1$.
+        \State \textbf{goto} \emph{loop}.
+        \State \textbf{close};
+        \EndIf
+        \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+        \State \textbf{goto} \emph{top}.
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+\fi

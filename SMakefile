@@ -1,0 +1,17 @@
+ppath=/tmp/remote
+
+default:: shark
+
+pipe:
+    test -f $(ppath) || mkfifo $(ppath)
+
+shark: pipe
+    wireshark -k -i $(ppath)
+
+lodump: pipe
+    sudo chgrp wireshark /usr/sbin/tcpdump
+    sudo tcpdump -s 0 -U -n -w - -i lo >  $(ppath)
+
+ethdump: pipe
+    sudo chgrp wireshark /usr/sbin/tcpdump
+    sudo tcpdump -s 0 -U -n -w - -i eth0 not port 22 >  $(ppath)
