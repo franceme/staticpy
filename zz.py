@@ -700,6 +700,8 @@ if __name__ == '__main__':
 			bare_run &= False
 		elif args.pycharm:
 			#https://stackoverflow.com/questions/28717464/docker-expose-all-ports-or-range-of-ports-from-7000-to-8000
+			#For Mobile, add the parameter ?mobile on
+			#other parameters: https://github.com/JetBrains/projector-client/tree/d70818f74babf8049ba81acf302e56263fd8780e/projector-client-web#main-parameters
 			#args.cmd = f"docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-pycharm-p".split()
 			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.pycharm)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/pycharm:latest"]
 			cmds += [
