@@ -64,6 +64,7 @@ def getArgs():
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
 	parser.add_argument("--dockerSwarm", help="Run DockerSwarm",action='store_true',default=False)
 	parser.add_argument("--pycharm", help="Run PyCharm",nargs="?", default=None)
+	parser.add_argument("--runme", help="Run the RunMe docker image",nargs="?", default=None)
 	parser.add_argument("--webstorm", help="Run WebStorm",nargs="?", default=None)
 	parser.add_argument("--swaggergenpy", help="Generate a Python Swaggerhub ClientSDK From swagger.json file",nargs="?", default=None)
 	parser.add_argument("--datagrip", help="Run DataGrip",nargs="?", default=None)
@@ -726,6 +727,34 @@ if __name__ == '__main__':
 				).string()
 			]
 			bare_run &= False
+		elif args.runme:
+			#https://hub.docker.com/r/statefulhq/runme
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "statefulhq/runme:latest",
+					ports = [8080],
+					#nocmd = True,
+					cmd = args.runme,
+					dind = True,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/sync/",#"/project/",
+					mountfrom = ":!",
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
+			bare_run &= False
+			#runme
 		elif args.mrust:
 			cmds += [
 				dock(save_host_dir=savedir,network = network,
