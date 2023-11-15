@@ -81,6 +81,7 @@ def getArgs():
 	parser.add_argument("--zoom", help="Run Zoom",action='store_true',default=False)
 	parser.add_argument("--mrust", help="Run a mini Rust Docker container",nargs="?", default=None)
 	parser.add_argument("--postman", help="Run HoppScotch (alias for postman)",action='store_true',default=False)
+	parser.add_argument("--dozzle", help="Run Dozzle (monitor of docker images)",action='store_true',default=False)
 	parser.add_argument("--inkscape", help="Run inkscape",action='store_true',default=False)
 	parser.add_argument("--ui", help="Run the base ui base docker image",nargs="?", default=None)
 	parser.add_argument("--ref", help="Run the ref base docker image",nargs="?", default=None)
@@ -443,6 +444,36 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = "--shm-size=512m -e VNC_PW=password"
+				).string()
+			]
+			bare_run &= False
+		elif args.dozzle:
+			#https://github.com/amir20/dozzle
+			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync hoppscotch/hoppscotch:latest"]
+			#cmds += [prefix + f" docker run --shm-size=512m -p 6901:6901 -v /home/{computer['user']}:/sync -e VNC_PW=password kasmweb/insomnia:1.12.0"]
+			#args.ports += ["3000"]
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "amir20/dozzle:latest",
+					ports = [8080],
+					cmd = None,
+					#nocmd = True,
+					dind = False,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					#mountto = "/sync",
+					#mountfrom = f"/home/{computer['user']}",
+					name = "dozzle",
+					login = True,
+					loggout = True,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = "--volume=/var/run/docker.sock:/var/run/docker.sock"
 				).string()
 			]
 			bare_run &= False
