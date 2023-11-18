@@ -64,6 +64,7 @@ def getArgs():
 	parser.add_argument("--vagrant", help="Run Vagrant",action='store_true',default=False)
 	parser.add_argument("--dockerSwarm", help="Run DockerSwarm",action='store_true',default=False)
 	parser.add_argument("--pycharm", help="Run PyCharm",nargs="?", default=None)
+	parser.add_argument("--office", help="Run the libreoffice app",nargs="?", default=None)
 	parser.add_argument("--runme", help="Run the RunMe docker image",nargs="?", default=None)
 	parser.add_argument("--webstorm", help="Run WebStorm",nargs="?", default=None)
 	parser.add_argument("--swaggergenpy", help="Generate a Python Swaggerhub ClientSDK From swagger.json file",nargs="?", default=None)
@@ -757,6 +758,33 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = None
+				).string()
+			]
+			bare_run &= False
+		elif args.office:
+			#https://hub.docker.com/r/linuxserver/libreoffice
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "lscr.io/linuxserver/libreoffice:latest",
+					ports = [3000, 3001],
+					#nocmd = True,
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/sync/",#"/project/",
+					mountfrom = args.office,
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = "-e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC"
 				).string()
 			]
 			bare_run &= False
