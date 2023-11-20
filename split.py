@@ -22,7 +22,7 @@ verify:
 
 split:
   @echo Splitting the original file
-  @split -b $(size) --verbose $(file) split_file_
+  @split -b $(size) $(file) split_file_
   @echo Zipping files
   @for f in split_file_*;do echo $$f;7z a $$f.zip $$f -sdel -mx=0;done
 
