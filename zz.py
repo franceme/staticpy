@@ -69,6 +69,7 @@ def getArgs():
 	parser.add_argument("--webstorm", help="Run WebStorm",nargs="?", default=None)
 	parser.add_argument("--swaggergenpy", help="Generate a Python Swaggerhub ClientSDK From swagger.json file",nargs="?", default=None)
 	parser.add_argument("--datagrip", help="Run DataGrip",nargs="?", default=None)
+	parser.add_argument("--grist", help="Run Grist",nargs="?", default=None)
 	parser.add_argument("--dejs", help="Run the JavaScript deobfuscator",nargs="?", default=None)
 	parser.add_argument("--intellij", help="Run Intellij",nargs="?", default=None)
 	parser.add_argument("--pyqodana", help="Run PyQodana",nargs="?", default=None)
@@ -1001,6 +1002,35 @@ if __name__ == '__main__':
 					remove = True,
 					mountto = "/sync/",#"/project/",
 					mountfrom = os.path.abspath(args.datagrip),
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
+			bare_run &= False
+		elif args.grist:
+			#https://github.com/gristlabs/grist-core
+			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
+			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.datagrip)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest"]
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "gristlabs/grist:latest",
+					ports = [8484],
+					#nocmd = True,
+					cmd = " ",
+					dind = True,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/persist/",#"/project/",
+					mountfrom = os.path.abspath(args.grist),
 					#name: str = "current_running"
 					login = False,
 					loggout = False,
