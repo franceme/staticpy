@@ -7,19 +7,19 @@ from importlib.metadata import version
 from datetime import datetime
 
 try:
-	if version('sdock') < '0.1.51':
+	if version('sdock') < '0.1.70':
 		raise Exception("Upgrade the version")
 except:
 	os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
-from sdock.vvv import *
+from sdock.vv import *
 
 #Choco Packages: https://community.chocolatey.org/packages
 
 box_name = "tempbox"
-box = vagrant(
+box = vagrant.app(
 	box="talisker/windows10pro",
 	name=box_name,
-	provider=Provider.virtualbox(),
+	provider=virtualbox.app(),
 	disablehosttime = True,
 	disablenetwork = True,
 	vmdate = datetime(year=2023, month=1, day=10, hour=3, minute=0, second=0),
