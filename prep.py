@@ -7,7 +7,7 @@ from importlib.metadata import version
 from datetime import datetime
 
 try:
-	if version('sdock') < '0.1.77':
+	if version('sdock') < '0.1.78':
 		raise Exception("Upgrade the version")
 except:
 	os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
