@@ -3,14 +3,7 @@ import os,sys
 contents = {}
 contents["vv"] = """#!/usr/bin/env python3
 import os,sys
-from importlib.metadata import version
 from datetime import datetime
-
-try:
-	if version('sdock') < '0.1.83':
-		raise Exception("Upgrade the version")
-except:
-	os.system("{0} -m pip install --upgrade sdock".format(sys.executable))
 from sdock.vv import *
 
 #Choco Packages: https://community.chocolatey.org/packages
