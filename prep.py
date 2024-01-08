@@ -1,7 +1,7 @@
 import os,sys
 
 contents = {}
-contents["vv"] = """
+contents["vv"] = """#!/usr/bin/env python3
 import os,sys
 from importlib.metadata import version
 from datetime import datetime
@@ -22,7 +22,7 @@ box = vagrant(
 	provider=Provider.virtualbox(),
 	disablehosttime = True,
 	disablenetwork = True,
-	vmdate = datetime(year=2023, month=01, day=10, hour=03, minute=0, second=0),
+	vmdate = datetime(year=2023, month=1, day=10, hour=3, minute=0, second=0),
 	python_packages = ["hugg"],
 )
 
