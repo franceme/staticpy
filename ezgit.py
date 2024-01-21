@@ -1,4 +1,4 @@
-import os,sys
+import os,sys,json
 
 def run(string):
 	print(string)
@@ -6,6 +6,8 @@ def run(string):
 
 #BFG Just in Case
 #https://rtyley.github.io/bfg-repo-cleaner/
+
+user_file = "~/.ezgit.json"
 
 def getArgs():
 	import argparse
@@ -19,6 +21,7 @@ def getArgs():
 	parser.add_argument("--reset", action="store_true",default=False, help="Reset the current repo to the remote repo")
 	parser.add_argument("-a","--agent", action="store_true",default=False, help="Run the agent")
 	parser.add_argument("-c","--cert", help="Add the certificate",nargs=1, default=None)
+	parser.add_argument("-u","--user", help="Set the user name",nargs=1, default=None)
 	parser.add_argument("-g","--clone", help="Clone a repo from the saved user name",nargs=1, default=None)
 	parser.add_argument("-z","--certz", help="Add the certificates from within ~/.ssh",action="store_true",default=False,)
 	parser.add_argument("-b","--branch", nargs=1,default=None, help="checkout the specified branch")
@@ -43,6 +46,14 @@ if __name__ == '__main__':
 		run("git config --global user.name \"{0}\"".format(args.login[0].split('@')[0]))
 		with open("/tmp/.ezgit.txt", "w+") as writer:
 			writer.write(args.login[0].split('@')[0])
+	if args.user:
+		if os.path.exists(user_file):
+			os.remove(user_file)
+		with open(user_file,"w+") as writer:
+			json.dump({
+				"user":args.user[0]
+			},writer)
+		run("git status")
 	if args.safe:
 		run("git config --global --add safe.directory {0}".format(args.safe[0]))
 	if args.status:
@@ -73,8 +84,12 @@ if __name__ == '__main__':
 		run("git commit -m \"{msg}\"".format(msg=''.join(args.message)))
 		run("git push")
 	if args.clone:
-		with open("/tmp/.ezgit.txt", "r") as reader:
-			username = reader.readlines()[0].strip()
+		if os.path.exists(user_file):
+			with open(user_file, "r") as reader:
+				username = json.load(reader)["user"]
+		else:
+			with open("/tmp/.ezgit.txt", "r") as reader:
+				username = reader.readlines()[0].strip()
 		run("git clone git@github.com:"+str(username)+"/"+str(args.clone[0]))
 	if args.file:
 		run("git add {0}".format(args.file[0]))
