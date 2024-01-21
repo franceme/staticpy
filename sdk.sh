@@ -8,6 +8,11 @@ function sourcing {
     source "$HOME/.sdkman/bin/sdkman-init.sh"
 }
 
+function install_gradle {
+    sourcing
+    yes|sdk i gradle 6.0
+}
+
 function install_seven {
     sourcing
 
@@ -49,6 +54,7 @@ fi
 
 if [ $1 == "all" ]; then
 echo "Installing sdkman" && full_install
+echo "Installing Gradle" && install_gradle
 fi
 
 if [ $1 == "seven" ] || [ $1 == "all" ]; then
