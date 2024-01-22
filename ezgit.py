@@ -7,7 +7,7 @@ def run(string):
 #BFG Just in Case
 #https://rtyley.github.io/bfg-repo-cleaner/
 
-user_file = "~/.ezgit.json"
+user_file = "/tmp/.ezgit.json"
 
 def getArgs():
 	import argparse
@@ -49,6 +49,7 @@ if __name__ == '__main__':
 	if args.user:
 		if os.path.exists(user_file):
 			os.remove(user_file)
+		run("touch {0}".format(user_file))
 		with open(user_file,"w+") as writer:
 			json.dump({
 				"user":args.user[0]
