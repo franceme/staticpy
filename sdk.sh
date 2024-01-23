@@ -6,6 +6,7 @@ function full_install {
 
 function sourcing {
     source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk update
 }
 
 function install_gradle {
@@ -26,6 +27,7 @@ function install_seven {
 
     VAR=$(sdk ls java|grep zulu|grep ' 7.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
+    export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 }
 
 function install_eight {
@@ -41,6 +43,7 @@ function install_eight {
 
     VAR=$(sdk ls java|grep zulu|grep ' 8.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
+    export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 }
 
 function install_leven {
@@ -56,6 +59,7 @@ function install_leven {
 
     VAR=$(sdk ls java|grep zulu|grep '11.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
+    export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 }
 
 
