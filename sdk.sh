@@ -28,6 +28,9 @@ function install_seven {
     VAR=$(sdk ls java|grep zulu|grep ' 7.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
+
+    echo "#!/bin/bash" >> /bin/java_seven
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_seven
 }
 
 function install_eight {
@@ -44,6 +47,9 @@ function install_eight {
     VAR=$(sdk ls java|grep zulu|grep ' 8.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
+
+    echo "#!/bin/bash" >> /bin/java_eight
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_eight
 }
 
 function install_leven {
@@ -60,6 +66,9 @@ function install_leven {
     VAR=$(sdk ls java|grep zulu|grep '11.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
+
+    echo "#!/bin/bash" >> /bin/java_leven
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_leven
 }
 
 
