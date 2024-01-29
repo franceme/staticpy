@@ -7,6 +7,7 @@ function dep_install {
 }
 
 function install_eight {
+    mkdir -p $HOME/.sdkman/candidates/python/3.8.15
     cd $HOME/.sdkman/candidates/python/3.8.15
     wget https://www.python.org/ftp/python/3.8.15/Python-3.8.15.tar.xz
 
@@ -15,6 +16,9 @@ function install_eight {
 
     echo "#!/bin/bash" >> /bin/py_eight
     echo "$HOME/.sdkman/candidates/python/3.8.15/python $@" >> /bin/py_eight
+
+    ln -s $HOME/.sdkman/candidates/python/3.8.15/ $HOME/.sdkman/candidates/python/current
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_nine {
@@ -27,6 +31,9 @@ function install_nine {
 
     echo "#!/bin/bash" >> /bin/py_nine
     echo "$HOME/.sdkman/candidates/python/3.9.18/python $@" >> /bin/py_nine
+
+    ln -s $HOME/.sdkman/candidates/python/3.9.18/ $HOME/.sdkman/candidates/python/current
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_ten {
@@ -39,6 +46,9 @@ function install_ten {
 
     echo "#!/bin/bash" >> /bin/py_ten
     echo "$HOME/.sdkman/candidates/python/3.10.13/python $@" >> /bin/py_ten
+
+    ln -s $HOME/.sdkman/candidates/python/3.10.13/ $HOME/.sdkman/candidates/python/current
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_eleven {
@@ -51,11 +61,14 @@ function install_eleven {
 
     echo "#!/bin/bash" >> /bin/py_leven
     echo "$HOME/.sdkman/candidates/python/3.11.6/python $@" >> /bin/py_leven
+
+    ln -s $HOME/.sdkman/candidates/python/3.11.6/ $HOME/.sdkman/candidates/python/current
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 
 # https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-9.html#ss9.1
-
+echo usage: $0 "all | eight | nine | ten | eleven"
 OPTIONS="all eight nine ten eleven"
 if [ -z "$1" ]; then 
     echo usage: $0 "all | eight | nine | ten | eleven"
