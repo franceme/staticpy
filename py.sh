@@ -1,7 +1,22 @@
 #!/bin/bash
 
 function dep_install {
-    yes|apt install wget curl zlib1g-dev libreadline-gplv2-dev libncurses5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev
+    yes|sudo apt install -y wget curl gcc make
+    yes|sudo apt install -y zlib1g-dev
+    yes|sudo apt install -y libreadline-gplv2-dev
+    yes|sudo apt install -y libncurses5-dev
+    yes|sudo apt install -y libssl-dev
+    yes|sudo apt install -y libsqlite3-dev
+    yes|sudo apt install -y tk-dev
+    yes|sudo apt install -y libgdbm-dev
+    yes|sudo apt install -y libc6-dev
+    yes|sudo apt install -y libbz2-dev
+    yes|sudo apt install -y llvm
+    yes|sudo apt install -y libncurses5-dev
+    yes|sudo apt install -y xz-utils
+    yes|sudo apt install -y tk-dev
+    yes|sudo apt install -y libxml2-dev
+    yes|sudo apt install -y libxmlsec1-de
     mkdir -p $HOME/.sdkman/candidates/python/
     cd $HOME/.sdkman/candidates/python/ && wget https://bootstrap.pypa.io/get-pip.py
 }
