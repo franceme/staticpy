@@ -73,7 +73,7 @@ function install_leven {
 
 
 # https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-9.html#ss9.1
-
+echo usage: $0 "all | eight | seven | eleven"
 OPTIONS="all eight seven eleven"
 if [ -z "$1" ]; then 
     echo usage: $0 "all | eight | seven | eleven"
