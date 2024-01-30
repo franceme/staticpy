@@ -5,6 +5,7 @@ function full_install {
 }
 
 function sourcing {
+    full_install
     source "$HOME/.sdkman/bin/sdkman-init.sh"
     sdk update
 }
