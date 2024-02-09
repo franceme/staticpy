@@ -30,9 +30,11 @@ function install_seven {
     yes|sdk i java $VAR
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bashrc
-    echo "export JAVA7_HOME=$JAVA7_HOME" >> /opt/java_extending.txt
+    echo "JAVA7_HOME=$JAVA7_HOME" >> /opt/java.env
+    echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bash_aliases
     echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bashrc
-    echo "export JAVA7=$JAVA7_HOME/bin/java" >> /opt/java_extending.txt
+    echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
+    echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
 
 
     #sudo echo "#!/usr/bin/env python" >> /bin/java_seven
@@ -64,9 +66,11 @@ function install_eight {
     yes|sdk i java $VAR
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bashrc
-    echo "export JAVA8_HOME=$JAVA8_HOME" >> /opt/java_extending.txt
+    echo "JAVA8_HOME=$JAVA8_HOME" >> /opt/java.env
+    echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bash_aliases
     echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bashrc
-    echo "export JAVA8=$JAVA8_HOME/bin/java" >> /opt/java_extending.txt
+    echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
+    echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
 
     JPATH=/opt/java_eight
 
@@ -90,9 +94,11 @@ function install_leven {
     yes|sdk i java $VAR
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bashrc
-    echo "export JAVA11_HOME=$JAVA11_HOME" >> /opt/java_extending.txt
+    echo "JAVA11_HOME=$JAVA11_HOME" >> /opt/java.env
+    echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bash_aliases
     echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bashrc
-    echo "export JAVA11=$JAVA11_HOME/bin/java" >> /opt/java_extending.txt
+    echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
+    echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
 
     JPATH=/opt/java_leven
 
