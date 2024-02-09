@@ -53,9 +53,11 @@ function install_eight {
     yes|sdk i java $VAR
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 
-    #sudo echo "#!/bin/bash" >> /bin/java_eight
-    #sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_eight
-    #sudo chmod 777 /bin/java_eight
+    JPATH=/opt/java_eight
+
+    echo "#!/bin/bash" >> $JPATH
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> $JPATH
+    chmod 777 $JPATH
 }
 
 function install_leven {
