@@ -31,6 +31,8 @@ function install_seven {
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bashrc
     echo "export JAVA7_HOME=$JAVA7_HOME" >> /opt/java_extending.txt
+    echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bashrc
+    echo "export JAVA7=$JAVA7_HOME/bin/java" >> /opt/java_extending.txt
 
 
     #sudo echo "#!/usr/bin/env python" >> /bin/java_seven
@@ -63,6 +65,8 @@ function install_eight {
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bashrc
     echo "export JAVA8_HOME=$JAVA8_HOME" >> /opt/java_extending.txt
+    echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bashrc
+    echo "export JAVA8=$JAVA8_HOME/bin/java" >> /opt/java_extending.txt
 
     JPATH=/opt/java_eight
 
@@ -87,6 +91,8 @@ function install_leven {
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bashrc
     echo "export JAVA11_HOME=$JAVA11_HOME" >> /opt/java_extending.txt
+    echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bashrc
+    echo "export JAVA11=$JAVA11_HOME/bin/java" >> /opt/java_extending.txt
 
     JPATH=/opt/java_leven
 
