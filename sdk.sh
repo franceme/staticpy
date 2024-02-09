@@ -30,12 +30,12 @@ function install_seven {
     yes|sdk i java $VAR
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 
-    sudo echo "#!/usr/bin/env python" >> /bin/java_seven
-    sudo echo "import os,sys" >> /bin/java_seven
-    sudo echo "cmd = '$HOME/.sdkman/candidates/java/$VAR/bin/java ' + ' '.join(sys.argv)" >> /bin/java_seven
-    sudo echo "print(cmd);os.system(cmd)" >> /bin/java_seven
-    #sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_seven
-    sudo chmod 777 /bin/java_seven
+    #sudo echo "#!/usr/bin/env python" >> /bin/java_seven
+    #sudo echo "import os,sys" >> /bin/java_seven
+    #sudo echo "cmd = '$HOME/.sdkman/candidates/java/$VAR/bin/java ' + ' '.join(sys.argv)" >> /bin/java_seven
+    #sudo echo "print(cmd);os.system(cmd)" >> /bin/java_seven
+    ##sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_seven
+    #sudo chmod 777 /bin/java_seven
 }
 
 function install_eight {
@@ -53,9 +53,9 @@ function install_eight {
     yes|sdk i java $VAR
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 
-    sudo echo "#!/bin/bash" >> /bin/java_eight
-    sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_eight
-    sudo chmod 777 /bin/java_eight
+    #sudo echo "#!/bin/bash" >> /bin/java_eight
+    #sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_eight
+    #sudo chmod 777 /bin/java_eight
 }
 
 function install_leven {
@@ -73,9 +73,9 @@ function install_leven {
     yes|sdk i java $VAR
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 
-    sudo echo "#!/bin/bash" >> /bin/java_leven
-    sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_leven
-    sudo chmod 777 /bin/java_leven
+    #sudo echo "#!/bin/bash" >> /bin/java_leven
+    #sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_leven
+    #sudo chmod 777 /bin/java_leven
 }
 
 
