@@ -36,6 +36,12 @@ function install_seven {
     #sudo echo "print(cmd);os.system(cmd)" >> /bin/java_seven
     ##sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_seven
     #sudo chmod 777 /bin/java_seven
+
+    JPATH=/opt/java_seven
+
+    echo "#!/bin/bash" >> $JPATH
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> $JPATH
+    chmod 777 $JPATH
 }
 
 function install_eight {
@@ -75,9 +81,11 @@ function install_leven {
     yes|sdk i java $VAR
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
 
-    #sudo echo "#!/bin/bash" >> /bin/java_leven
-    #sudo echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> /bin/java_leven
-    #sudo chmod 777 /bin/java_leven
+    JPATH=/opt/java_leven
+
+    echo "#!/bin/bash" >> $JPATH
+    echo "$HOME/.sdkman/candidates/java/$VAR/bin/java $@" >> $JPATH
+    chmod 777 $JPATH
 }
 
 
