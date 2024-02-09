@@ -31,9 +31,11 @@ function install_seven {
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bashrc
     echo "JAVA7_HOME=$JAVA7_HOME" >> /opt/java.env
+    echo "JAVA7_HOME=$JAVA7_HOME" >> $HOME/.sdkman/manual.env
     echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bash_aliases
     echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bashrc
     echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
+    echo "JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
 
 
@@ -67,9 +69,11 @@ function install_eight {
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bashrc
     echo "JAVA8_HOME=$JAVA8_HOME" >> /opt/java.env
+    echo "JAVA8_HOME=$JAVA8_HOME" >> $HOME/.sdkman/manual.env
     echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bash_aliases
     echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bashrc
     echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
+    echo "JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
 
     JPATH=/opt/java_eight
@@ -95,9 +99,11 @@ function install_leven {
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
     echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bashrc
     echo "JAVA11_HOME=$JAVA11_HOME" >> /opt/java.env
+    echo "JAVA11_HOME=$JAVA11_HOME" >> $HOME/.sdkman/manual.env
     echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bash_aliases
     echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bashrc
     echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
+    echo "JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
 
     JPATH=/opt/java_leven
