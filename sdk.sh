@@ -24,7 +24,7 @@ function install_seven {
     if echo "$IS_INSTALLED" | grep -q -E "$HAS_INSTALLED"; then
         echo "Java JDK Version already installed";
         exit 0
-    fi
+    fi 
 
     VAR=$(sdk ls java|grep zulu|grep ' 7.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
@@ -37,6 +37,7 @@ function install_seven {
     echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
     echo "JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
+    ln -s $JAVA7_HOME/bin/java $HOME/.sdkman/candidates/java/seven
 
 
     #sudo echo "#!/usr/bin/env python" >> /bin/java_seven
@@ -75,6 +76,7 @@ function install_eight {
     echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
     echo "JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
+    ln -s $JAVA8_HOME/bin/java $HOME/.sdkman/candidates/java/eight
 
     JPATH=/opt/java_eight
 
@@ -105,6 +107,7 @@ function install_leven {
     echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
     echo "JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
+    ln -s $JAVA11_HOME/bin/java $HOME/.sdkman/candidates/java/leven
 
     JPATH=/opt/java_leven
 
