@@ -29,14 +29,14 @@ function install_seven {
     VAR=$(sdk ls java|grep zulu|grep ' 7.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA7_HOME="$HOME/.sdkman/candidates/java/$VAR/"
-    echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bashrc
-    echo "JAVA7_HOME=$JAVA7_HOME" >> /opt/java.env
-    echo "JAVA7_HOME=$JAVA7_HOME" >> $HOME/.sdkman/manual.env
-    echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bash_aliases
-    echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bashrc
-    echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
-    echo "JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.sdkman/manual.env
-    echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
+    #echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bashrc
+    #echo "JAVA7_HOME=$JAVA7_HOME" >> /opt/java.env
+    #echo "JAVA7_HOME=$JAVA7_HOME" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA7_HOME=$JAVA7_HOME" >> $HOME/.bash_aliases
+    #echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bashrc
+    #echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
+    #echo "JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
     ln -s $JAVA7_HOME $HOME/.sdkman/candidates/java/seven
     ln -s $JAVA7_HOME/bin/java $HOME/.sdkman/candidates/java/seven_java
 
@@ -69,14 +69,14 @@ function install_eight {
     VAR=$(sdk ls java|grep zulu|grep ' 8.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA8_HOME="$HOME/.sdkman/candidates/java/$VAR/"
-    echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bashrc
-    echo "JAVA8_HOME=$JAVA8_HOME" >> /opt/java.env
-    echo "JAVA8_HOME=$JAVA8_HOME" >> $HOME/.sdkman/manual.env
-    echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bash_aliases
-    echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bashrc
-    echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
-    echo "JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.sdkman/manual.env
-    echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
+    #echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bashrc
+    #echo "JAVA8_HOME=$JAVA8_HOME" >> /opt/java.env
+    #echo "JAVA8_HOME=$JAVA8_HOME" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA8_HOME=$JAVA8_HOME" >> $HOME/.bash_aliases
+    #echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bashrc
+    #echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
+    #echo "JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
     ln -s $JAVA8_HOME $HOME/.sdkman/candidates/java/eight
     ln -s $JAVA8_HOME/bin/java $HOME/.sdkman/candidates/java/eight_java
 
@@ -101,14 +101,14 @@ function install_leven {
     VAR=$(sdk ls java|grep zulu|grep '11.0'|head -n 1|awk -F ' ' '{print $8}')
     yes|sdk i java $VAR
     export JAVA11_HOME="$HOME/.sdkman/candidates/java/$VAR/"
-    echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bashrc
-    echo "JAVA11_HOME=$JAVA11_HOME" >> /opt/java.env
-    echo "JAVA11_HOME=$JAVA11_HOME" >> $HOME/.sdkman/manual.env
-    echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bash_aliases
-    echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bashrc
-    echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
-    echo "JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.sdkman/manual.env
-    echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
+    #echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bashrc
+    #echo "JAVA11_HOME=$JAVA11_HOME" >> /opt/java.env
+    #echo "JAVA11_HOME=$JAVA11_HOME" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA11_HOME=$JAVA11_HOME" >> $HOME/.bash_aliases
+    #echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bashrc
+    #echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
+    #echo "JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.sdkman/manual.env
+    #echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
     ln -s $JAVA11_HOME $HOME/.sdkman/candidates/java/leven
     ln -s $JAVA11_HOME/bin/java $HOME/.sdkman/candidates/java/leven_java
 
