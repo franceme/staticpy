@@ -37,7 +37,8 @@ function install_seven {
     echo "JAVA7=$JAVA7_HOME/bin/java" >> /opt/java.env
     echo "JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA7=$JAVA7_HOME/bin/java" >> $HOME/.bash_aliases
-    ln -s $JAVA7_HOME/bin/java $HOME/.sdkman/candidates/java/seven
+    ln -s $JAVA7_HOME $HOME/.sdkman/candidates/java/seven
+    ln -s $JAVA7_HOME/bin/java $HOME/.sdkman/candidates/java/seven_java
 
 
     #sudo echo "#!/usr/bin/env python" >> /bin/java_seven
@@ -76,7 +77,8 @@ function install_eight {
     echo "JAVA8=$JAVA8_HOME/bin/java" >> /opt/java.env
     echo "JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA8=$JAVA8_HOME/bin/java" >> $HOME/.bash_aliases
-    ln -s $JAVA8_HOME/bin/java $HOME/.sdkman/candidates/java/eight
+    ln -s $JAVA8_HOME $HOME/.sdkman/candidates/java/eight
+    ln -s $JAVA8_HOME/bin/java $HOME/.sdkman/candidates/java/eight_java
 
     JPATH=/opt/java_eight
 
@@ -107,7 +109,8 @@ function install_leven {
     echo "JAVA11=$JAVA11_HOME/bin/java" >> /opt/java.env
     echo "JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.sdkman/manual.env
     echo "export JAVA11=$JAVA11_HOME/bin/java" >> $HOME/.bash_aliases
-    ln -s $JAVA11_HOME/bin/java $HOME/.sdkman/candidates/java/leven
+    ln -s $JAVA11_HOME $HOME/.sdkman/candidates/java/leven
+    ln -s $JAVA11_HOME/bin/java $HOME/.sdkman/candidates/java/leven_java
 
     JPATH=/opt/java_leven
 
