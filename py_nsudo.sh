@@ -33,7 +33,7 @@ function install_eight {
     echo "$HOME/.sdkman/candidates/python/3.8.15/python $@" >> /bin/py_eight
 
     ln -s $HOME/.sdkman/candidates/python/3.8.15/ $HOME/.sdkman/candidates/python/current
-     rm /bin/spy; ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_nine {
@@ -48,7 +48,7 @@ function install_nine {
     echo "$HOME/.sdkman/candidates/python/3.9.18/python $@" >> /bin/py_nine
 
     ln -s $HOME/.sdkman/candidates/python/3.9.18/ $HOME/.sdkman/candidates/python/current
-     rm /bin/spy; ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_ten {
@@ -63,7 +63,7 @@ function install_ten {
     echo "$HOME/.sdkman/candidates/python/3.10.13/python $@" >> /bin/py_ten
 
     ln -s $HOME/.sdkman/candidates/python/3.10.13/ $HOME/.sdkman/candidates/python/current
-     rm /bin/spy; ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 function install_eleven {
@@ -78,7 +78,7 @@ function install_eleven {
     echo "$HOME/.sdkman/candidates/python/3.11.6/python $@" >> /bin/py_leven
 
     ln -s $HOME/.sdkman/candidates/python/3.11.6/ $HOME/.sdkman/candidates/python/current
-     rm /bin/spy; ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
 }
 
 
