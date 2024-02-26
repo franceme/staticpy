@@ -3,8 +3,6 @@
 import os,sys
 
 def write(file, content,delete=False):
-	if os.path.exists(file) and delete:
-		os.remove(file)
 	with open(file, "w+") as writer:
 		writer.write(content)
 
