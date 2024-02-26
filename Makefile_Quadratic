@@ -5,7 +5,7 @@ default:: full
 
 dockerfile:
 	echo "FROM rust:latest">>Dockerfile
-	echo "RUN apt-get update && apt-get install -y npm && curl https://rustwasm.github.io/wasm-pack/installer/init">>Dockerfile.sh -sSf | sh && rustup target add wasm32-unknown-unknown
+	echo "RUN apt-get update && apt-get install -y npm && curl https://rustwasm.github.io/wasm-pack/installer/init -sSf | sh && rustup target add wasm32-unknown-unknown">>Dockerfile
 	echo "COPY package*.json ./">>Dockerfile
 	echo "COPY . .">>Dockerfile
 	echo "RUN npm run build:wasm && npm install">>Dockerfile
