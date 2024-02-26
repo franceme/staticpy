@@ -13,11 +13,11 @@ default:: full
 
 download:
 	#The one right before license change
-	wget https://github.com/quadratichq/quadratic/archive/d6e9b05952d26eb7130cd308e8fa0cb805c7734e.zip
+	#wget https://github.com/quadratichq/quadratic/archive/d6e9b05952d26eb7130cd308e8fa0cb805c7734e.zip
 	#The latest
 	#wget https://github.com/quadratichq/quadratic/archive/refs/heads/main.zip
 	#The one from whoever added the docker file
-	#wget https://github.com/irjensen/quadratic/archive/30e11ae44625059b722150d70559491596c92b6c.zip
+	wget https://github.com/irjensen/quadratic/archive/30e11ae44625059b722150d70559491596c92b6c.zip
 	7z x *.zip 
 	rm *.zip
 	mv $(name)-* $(name)
