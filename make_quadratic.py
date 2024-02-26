@@ -26,7 +26,7 @@ build:
 	if test -d $(name)/;then echo exists;else make download;fi
 	cd $(name)/ && docker build -t $(name) --platform=linux/amd64 .
 run:
-	cd $(name)/ && docker run --platform linux/amd64 -p 3000:3000 $(name)
+	cd $(name)/ && docker run -v "`pwd`:/sync" --platform linux/amd64 -p 3000:3000 $(name)
 
 full:build run
 """)
