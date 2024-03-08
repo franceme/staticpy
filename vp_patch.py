@@ -12,7 +12,7 @@ def getArgs():
 def step_one(vname):
 	return """VBoxManage setextradata "{0}" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 1""".format(vname)
 
-def set_two(vname, time_to_set_to=None):
+def step_two(vname, time_to_set_to=None):
 	time_to_set = "-31536000000"
 	"""
 	https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
