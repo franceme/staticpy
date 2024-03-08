@@ -56,6 +56,6 @@ if __name__ == '__main__':
 	vname = str(args.name[0]).strip()
 	for step in [
 		step_one,
-		step_two,
+		#step_two,
 	]:
 		run(step(vname))
