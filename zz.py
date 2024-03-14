@@ -93,7 +93,7 @@ def getArgs():
 	parser.add_argument("--colab", help="Run a local instance for Google Colab",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
 	parser.add_argument("--openrefine", help="Run the openrefine app",nargs="?", default=None)
-	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)elyra
+	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)
 	parser.add_argument("--gridstore", help="Prefix gridstore app",action='store_true',default=False)
 	parser.add_argument("--elyra", help="Prefix elyra app",action='store_true',default=False)
 	args,unknown = parser.parse_known_args()
@@ -327,7 +327,7 @@ if __name__ == '__main__':
 					"7z x master.zip",
 					"rm master.zip",
 					"cd gridstudio-master/ && chmod 777 run.sh && ./run.sh",
-					"yes|rm -r gridstudio-master/"
+					"yes|rm -r gridstudio-master/",
 				]
 		elif args.elyra:
 			#https://github.com/elyra-ai/elyra
