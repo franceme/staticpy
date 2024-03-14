@@ -23,6 +23,8 @@ x = [
     "jupyter",
     "notebook",
     "jupyterlab",
+    "jupyterlab-sidecar",
+    "ipywidgets",
     "voila",
     "voici",
 ]
