@@ -334,6 +334,7 @@ if __name__ == '__main__':
 			#cmds += [docker run -it -p 8888:8888 -v ${HOME}/opensource/jupyter-notebooks/:/home/jovyan/work -w /home/jovyan/work elyra/elyra:dev jupyter lab --debug]
 			#args.ports += ["3000"]
 			## https://files.pythonhosted.org/packages/f0/3a/f5ce74b2bdbbe59c925bb3398ec0781b66a64b8a23e2f6adc7ab9f1005d9/apache_airflow-1.10.15-py2.py3-none-any.whl
+			## Added medium assist https://medium.com/ibm-data-ai/getting-started-with-apache-airflow-operators-in-elyra-aae882f80c4a
 			cmds += [
 				dock(save_host_dir=savedir,network = network,
 					docker = "docker",
