@@ -19,7 +19,12 @@ x = [
     "splunkr",
     "torrentp",
     "pnostic",
-    "pip"
+    "pip",
+    "jupyter",
+    "notebook",
+    "jupyterlab",
+    "voila",
+    "voici",
 ]
 
 os.system("{0} -m pip install --upgrade {1}".format(sys.executable, ' '.join(x)))
