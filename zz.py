@@ -94,6 +94,7 @@ def getArgs():
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
 	parser.add_argument("--openrefine", help="Run the openrefine app",nargs="?", default=None)
 	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)
+	parser.add_argument("--gridstore", help="Prefix gridstore app",action='store_true',default=False)
 	args,unknown = parser.parse_known_args()
 	return args
 
@@ -315,6 +316,17 @@ if __name__ == '__main__':
 						preClean = False,
 						extra = "-d /data -m 4G"
 					).string()
+				]
+		elif args.gridstore:
+			#https://github.com/ricklamers/gridstudio
+			#args.ports += ["3000"]
+			if True:
+				cmds += [
+					"wget https://github.com/ricklamers/gridstudio/archive/refs/heads/master.zip",
+					"7z x master.zip",
+					"rm master.zip",
+					"cd gridstudio-master/ && chmod 777 run.sh && ./run.sh",
+					"yes|rm -r gridstudio-master/"
 				]
 		elif args.superset:
 			#https://hub.docker.com/r/apache/superset
