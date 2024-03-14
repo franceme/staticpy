@@ -24,10 +24,11 @@ x = [
     "jupyter",
     "notebook",
     "jupyterlab",
+    "jupyterlite",
     "jupyterlab-sidecar",
     "ipywidgets",
     "voila",
-    "voici",
+    "voici"
 ]
 
-os.system("{0} -m pip install --upgrade {1}".format(sys.executable, ' '.join(x)))
+os.system("{0} -m pip install --upgrade {1}".format(sys.executable, '  '.join(x)))
