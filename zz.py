@@ -92,6 +92,8 @@ def getArgs():
 	parser.add_argument("--dbhub", help="Run a local instance of DBHub",action='store_true',default=False)
 	parser.add_argument("--colab", help="Run a local instance for Google Colab",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
+	parser.add_argument("--openrefine", help="Run the openrefine app",nargs="?", default=None)
+	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)
 	args,unknown = parser.parse_known_args()
 	return args
 
@@ -284,6 +286,68 @@ if __name__ == '__main__':
 						preClean = False,
 						extra = None
 					).string()
+				]
+		elif args.openrefine:
+			#https://hub.docker.com/r/felixlohmeier/openrefine/
+			#cmds += [prefix + f" docker run -p 3000:3000 -v /home/{computer['user']}:/sync linuxserver/blender:latest"]
+			#cmds += [docker run --rm -p 80:3333 -v /home/felix/refine:/data:z felixlohmeier/openrefine:3.5.0 -i 0.0.0.0 -d /data -m 4G]
+			if True:
+				cmds += [
+					dock(save_host_dir=savedir,network = network,
+						docker = "docker",
+						image = "felixlohmeier/openrefine:3.5.0",
+						ports = [3333],
+						cmd = None,
+						#nocmd = True,
+						dind = dind,
+						shared = False,
+						detach = detach,
+						sudo = sudo,
+						remove = True,
+						mountto = "/sync",
+						mountfrom = f"/home/{computer['user']}",
+						#name: str = "current_running"
+						login = False,
+						loggout = False,
+						logg = False,
+						macaddress = None,
+						postClean = False,
+						preClean = False,
+						extra = "-d /data -m 4G"
+					).string()
+				]
+		elif args.superset:
+			#https://hub.docker.com/r/apache/superset
+			#cmds += [docker run -d -p 8080:8088 -e "SUPERSET_SECRET_KEY=your_secret_key_here" --name superset apache/superset]
+			#args.ports += ["3000"]
+			if True:
+				cmds += [
+					dock(save_host_dir=savedir,network = network,
+						docker = "docker",
+						image = "apache/superset",
+						ports = [8080],
+						cmd = None,
+						#nocmd = True,
+						dind = dind,
+						shared = False,
+						detach = detach,
+						sudo = sudo,
+						remove = True,
+						mountto = "/sync",
+						mountfrom = f"/home/{computer['user']}",
+						name = "superset",
+						login = False,
+						loggout = False,
+						logg = False,
+						macaddress = None,
+						postClean = False,
+						preClean = False,
+						extra = """-e "SUPERSET_SECRET_KEY=REALLYREALLYREALLYSECRETKEYH3R3" """
+					).string(),
+					"""docker exec -it superset superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin""",
+					"""docker exec -it superset superset db upgrade""",
+					"""docker exec -it superset superset load_examples""",
+					"""docker exec -it superset superset init"""
 				]
 			else:
 				cmds += [
