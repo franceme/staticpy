@@ -31,6 +31,7 @@ def getArgs():
 	parser.add_argument("--upsub", action="store_true",default=False, help="Update the submodules")
 	parser.add_argument("--wipe", action="store_true",default=False, help="Run a git history wipe")
 	parser.add_argument("--noFlow", action="store_true",default=False, help="Run a git actions flow history wipe (has to be disabled manually)")
+	parser.add_argument("--chmod", action="store_true",default=False, help="Reset the chmod changes")
 	return parser.parse_args()
 
 if __name__ == '__main__':
@@ -59,6 +60,21 @@ if __name__ == '__main__':
 		run("git config --global --add safe.directory {0}".format(args.safe[0]))
 	if args.status:
 		run("git status")
+	if args.chmod:
+		try:
+			import mystring
+		except:
+			os.system("{0} -m pip install --upgrade mystring".format(sys.executable))
+			import mystring
+
+		for foil_line in mystring.string("git status").exec(display=False,lines=True):
+			foil_line = foil_line.strip()
+			if foil_line.startswith("modified"):
+				foil_line = foil_line.replace("modified:","").strip()
+				foil_diff = mystring.string("git diff {0}".format(foil_line)).exec(display=False, lines=True)
+				if len(foil_diff) == 3 and foil_diff[1].startswith("old mode") and foil_diff[2].startswith("new mode"):
+					mystring.string("git checkout {0}".format(foil_line)).exec(display=False)
+
 	if args.backward:
 		run("git reset --soft HEAD~1")
 	if args.reset:
