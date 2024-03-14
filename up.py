@@ -17,6 +17,7 @@ x = [
     "hugg[all]",
     "sdock[all]",
     "splunkr",
+    "pyplotlib",
     "torrentp",
     "pnostic",
     "pip",
