@@ -93,8 +93,9 @@ def getArgs():
 	parser.add_argument("--colab", help="Run a local instance for Google Colab",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
 	parser.add_argument("--openrefine", help="Run the openrefine app",nargs="?", default=None)
-	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)
+	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)elyra
 	parser.add_argument("--gridstore", help="Prefix gridstore app",action='store_true',default=False)
+	parser.add_argument("--elyra", help="Prefix elyra app",action='store_true',default=False)
 	args,unknown = parser.parse_known_args()
 	return args
 
@@ -328,6 +329,35 @@ if __name__ == '__main__':
 					"cd gridstudio-master/ && chmod 777 run.sh && ./run.sh",
 					"yes|rm -r gridstudio-master/"
 				]
+		elif args.elyra:
+			#https://github.com/elyra-ai/elyra
+			#cmds += [docker run -it -p 8888:8888 -v ${HOME}/opensource/jupyter-notebooks/:/home/jovyan/work -w /home/jovyan/work elyra/elyra:dev jupyter lab --debug]
+			#args.ports += ["3000"]
+			## https://files.pythonhosted.org/packages/f0/3a/f5ce74b2bdbbe59c925bb3398ec0781b66a64b8a23e2f6adc7ab9f1005d9/apache_airflow-1.10.15-py2.py3-none-any.whl
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "elyra/elyra",
+					ports = [8888],
+					cmd = None,
+					#nocmd = True,
+					dind = dind,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/sync", #"/home/jovyan/work",
+					mountfrom = f"/home/{computer['user']}",
+					name = "superset",
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = """-w /sync """
+				).string()
+			]
 		elif args.superset:
 			#https://hub.docker.com/r/apache/superset
 			#cmds += [docker run -d -p 8080:8088 -e "SUPERSET_SECRET_KEY=your_secret_key_here" --name superset apache/superset]
