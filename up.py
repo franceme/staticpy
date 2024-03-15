@@ -25,7 +25,6 @@ x = [
     "notebook",
     "jupyterlab",
     "jupyterlite",
-    "jupyterlab-sidecar",
     "ipywidgets",
     "voila",
     "voici"
