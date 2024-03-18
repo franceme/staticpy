@@ -3,7 +3,7 @@ import os,sys
 if "pip" in " ".join(sys.argv):
     os.system("{0} <(curl -sL https://bootstrap.pypa.io/get-pip.py)".format(sys.executable))
 
-x = [
+for x in [
     "pydbhub",
     "funbelts",
     "hasana",
@@ -28,6 +28,5 @@ x = [
     "ipywidgets",
     "voila",
     "voici"
-]
-
-os.system("{0} -m pip install --upgrade {1}".format(sys.executable, '  '.join(x)))
+]:
+    os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
