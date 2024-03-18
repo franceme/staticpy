@@ -74,6 +74,7 @@ if __name__ == '__main__':
 				foil_diff = mystring.string("git diff {0}".format(foil_line)).exec(display=False, lines=True)
 				if len(foil_diff) == 3 and foil_diff[1].startswith("old mode") and foil_diff[2].startswith("new mode"):
 					mystring.string("git checkout {0}".format(foil_line)).exec(display=False)
+			print(".",end='',flush=True)
 
 	if args.backward:
 		run("git reset --soft HEAD~1")
