@@ -4,6 +4,10 @@ if "pip" in " ".join(sys.argv):
     os.system("{0} <(curl -sL https://bootstrap.pypa.io/get-pip.py)".format(sys.executable))
 
 for x in [
+    "PyGithub",
+    "requests",
+    "gett",
+    "mystring[all]",
     "pydbhub",
     "funbelts",
     "hasana",
