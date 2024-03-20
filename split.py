@@ -8,7 +8,7 @@ file={foil_name}
 hash_algo=sha512sum
 hash=$(file).sums
 default:: build
-size=2G
+size=50M
 #build: hash split
 build: join
 
