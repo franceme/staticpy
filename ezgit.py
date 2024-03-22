@@ -4,6 +4,28 @@ def run(string):
 	print(string)
 	os.system(string)
 
+def exec(string, display=True, lines=False):
+	import subprocess
+
+	output_contents = ""
+	if display:
+		print(string)
+	process = subprocess.Popen(string,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=1,encoding='utf-8', universal_newlines=True, close_fds=True)
+	while True:
+		out = process.stdout.readline()
+		if out == '' and process.poll() != None:
+			break
+		if out != '':
+			if display:
+				sys.stdout.write(out)
+			output_contents += out
+			sys.stdout.flush()
+
+	if not lines:
+		return output_contents
+	else:
+		return [x for x in output_contents.split('\n') if x is not None and str(x).strip() != '']
+
 #BFG Just in Case
 #https://rtyley.github.io/bfg-repo-cleaner/
 
@@ -32,6 +54,7 @@ def getArgs():
 	parser.add_argument("--wipe", action="store_true",default=False, help="Run a git history wipe")
 	parser.add_argument("--noFlow", action="store_true",default=False, help="Run a git actions flow history wipe (has to be disabled manually)")
 	parser.add_argument("--chmod", action="store_true",default=False, help="Reset the chmod changes")
+	parser.add_argument("--init", action="store_true",default=False, help="Reset the odd __init__ file changes")
 	return parser.parse_args()
 
 if __name__ == '__main__':
@@ -78,6 +101,12 @@ if __name__ == '__main__':
 
 	if args.backward:
 		run("git reset --soft HEAD~1")
+	if args.init:
+		for diff_line in exec("git status", lines=True):
+			if diff_line.startswith("\t") and "__init__.py" in diff_line and "deleted" in diff_line:
+				exec(
+					"git checkout "+str(diff_line.split(":")[-1].strip())
+				)
 	if args.reset:
 		run("git reset --hard origin/master")
 	if args.branch:
