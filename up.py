@@ -12,6 +12,8 @@ for x in [
     "funbelts",
     "hasana",
     "petitext",
+    "plotly",
+    "kaleido", #Used for plotly svg
     "ephfile",
     "messenger-python",
     "morchest",
