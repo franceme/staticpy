@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
 		for foil_line in mystring.string("git status").exec(display=False,lines=True):
 			og_foil_loine = dc(foil_line)
+			print(og_foil_loine, end='\n',flush=True)
 			foil_line = foil_line.strip()
 			if foil_line.startswith("modified"):
 				foil_line = foil_line.replace("modified:","").strip()
