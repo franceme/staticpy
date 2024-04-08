@@ -1,4 +1,5 @@
 import os,sys,json
+from copy import deepcopy as dc
 
 def run(string):
 	print(string)
@@ -104,6 +105,7 @@ if __name__ == '__main__':
 			import mystring
 
 		for foil_line in mystring.string("git status").exec(display=False,lines=True):
+			og_foil_loine = dc(foil_line)
 			foil_line = foil_line.strip()
 			if foil_line.startswith("modified"):
 				foil_line = foil_line.replace("modified:","").strip()
@@ -111,8 +113,8 @@ if __name__ == '__main__':
 				if len(foil_diff) == 3 and foil_diff[1].startswith("old mode") and foil_diff[2].startswith("new mode"):
 					pass
 				else:
-					print(foil_line, end='\n',flush=True)
-			print(foil_line, end='\n',flush=True)
+					print(og_foil_loine, end='\n',flush=True)
+			print(og_foil_loine, end='\n',flush=True)
 	if args.backward:
 		run("git reset --soft HEAD~1")
 	if args.init:
