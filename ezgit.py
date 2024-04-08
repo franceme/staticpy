@@ -197,8 +197,13 @@ if __name__ == '__main__':
 				line_to_display = og_foil_loine
 
 			if line_to_display:
-				if "/" in line_to_display and "." in line_to_display:
-					print(Color.custom(og_foil_loine, bold=True, fg_red=True), end='\n',flush=True)
+				if "/" in line_to_display and "." in line_to_display and "Your branch is up to date" not in line_to_display and "git add/rm" not in line_to_display:
+					if "deleted:" in og_foil_loine:
+						print(Color.custom(og_foil_loine, bold=True, fg_red=True), end='\n',flush=True)
+					elif "modified:" in og_foil_loine:
+						print(Color.custom(og_foil_loine, bold=True, fg_blue=True), end='\n',flush=True)
+					else:
+						print(Color.custom(og_foil_loine, bold=True, fg_green=True), end='\n',flush=True)
 				else:
 					print(og_foil_loine, end='\n',flush=True)
 	if args.backward:
