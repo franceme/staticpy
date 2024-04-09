@@ -26,7 +26,7 @@ split:
   @echo Zipping files
   @for f in split_file_*;do echo $$f;7z a $$f.zip $$f -sdel -mx=0;done
 
-join:
+subjoin:
   @echo Unzipping files
   @for f in split_file_*zip;do echo $$f;7z x $$f;done
   @echo Removing all of the *.zip files
@@ -41,6 +41,14 @@ join:
   @rm $(file)
   @rm $(hash)
   @rm Makefile
+
+join:
+	@mkdir tmp/
+	@cp *.zip tmp/
+	@cp Makefile tmp/
+	@cp santafixer_vudenc_extra_run_folders.zip.sums tmp/
+	@cd tmp/ && make subjoin
+
 """)
     for line in fileinput.FileInput("Makefile",inplace=1):
         print(line.replace("  ","	"),end='')
