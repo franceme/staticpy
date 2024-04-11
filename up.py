@@ -33,6 +33,7 @@ for x in [
     "jupyterlite",
     "ipywidgets",
     "voila",
-    "voici"
+    "voici",
+    "pygwalker"
 ]:
     os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
