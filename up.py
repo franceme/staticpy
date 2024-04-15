@@ -34,6 +34,7 @@ for x in [
     "ipywidgets",
     "voila",
     "voici",
-    "pygwalker"
+    "pygwalker",
+    "monacopy",
 ]:
     os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
