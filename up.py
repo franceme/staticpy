@@ -36,5 +36,6 @@ for x in [
     "voici",
     "pygwalker",
     "monacopy",
+    "python-dateutil",
 ]:
     os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
