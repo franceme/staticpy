@@ -134,6 +134,7 @@ def getArgs():
 	parser.add_argument("--noFlow", action="store_true",default=False, help="Run a git actions flow history wipe (has to be disabled manually)")
 	parser.add_argument("--chmod", action="store_true",default=False, help="Reset the chmod changes")
 	parser.add_argument("--init", action="store_true",default=False, help="Reset the odd __init__ file changes")
+	parser.add_argument("--creds", action="store_true",default=False, help="Set the global credential manager")
 	return parser.parse_args()
 
 if __name__ == '__main__':
@@ -160,6 +161,8 @@ if __name__ == '__main__':
 		run("git status")
 	if args.safe:
 		run("git config --global --add safe.directory {0}".format(args.safe[0]))
+	if args.creds:
+		run("git config --global credential.helper manager")
 	if args.chmod:
 		try:
 			import mystring
