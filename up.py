@@ -37,5 +37,6 @@ for x in [
     "pygwalker",
     "monacopy",
     "python-dateutil",
+    "u-msgpack-python",
 ]:
     os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
