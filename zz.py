@@ -93,6 +93,7 @@ def getArgs():
 	parser.add_argument("--dbhub", help="Run a local instance of DBHub",action='store_true',default=False)
 	parser.add_argument("--colab", help="Run a local instance for Google Colab",action='store_true',default=False)
 	parser.add_argument("--results", help="Any Results Directory",nargs="?", default="RunResults")
+	parser.add_argument("--ball", help="Run Ballerina with folder",nargs="?", default=None)
 	parser.add_argument("--openrefine", help="Run the openrefine app",nargs="?", default=None)
 	parser.add_argument("--superset", help="Run the superset app",nargs="?", default=None)
 	parser.add_argument("--gridstore", help="Prefix gridstore app",action='store_true',default=False)
@@ -1136,6 +1137,34 @@ if __name__ == '__main__':
 					remove = True,
 					mountto = "/sync/",#"/project/",
 					mountfrom = os.path.abspath(args.datagrip),
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
+				).string()
+			]
+			bare_run &= False
+		elif args.ball:
+			#args.cmd = f"sudo docker run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.intellij)}/:/project -p {try_port('8887')}:8887 registry.jetbrains.team/p/prj/containers/projector-idea-u".split()
+			#cmds += [f" {sdock} run --rm -it --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v {os.path.abspath(args.ball)}/:/project -p {try_port('8887')}:8887  -p 3000-4000:3000-4000 frantzme/mygrip:latest"]
+			cmds += [
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "frantzme/ballerina:lite",
+					ports = [8887, 8888, 8912],
+					#nocmd = True,
+					cmd = None,
+					dind = True,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/sync/",#"/project/",
+					mountfrom = os.path.abspath(args.ball),
 					#name: str = "current_running"
 					login = False,
 					loggout = False,
