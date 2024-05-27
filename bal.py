@@ -28,9 +28,9 @@ if __name__ == "__main__":
 		if not os.path.exists(os.path.join(base, localize)):
 			cmds += ['cd {0} && git clone git@github.com:{1}/{2}'.format(base, user, localize)]
 
-		cmds += ['cd {0} && bal clean'.format(localize)]
-		cmds += ['cd {0} && bal pack'.format(localize)]
-		cmds += ['cd {0} && bal push --repository local'.format(localize)]
+		cmds += ['cd {0} && bal clean'.format(local)]
+		cmds += ['cd {0} && bal pack'.format(local)]
+		cmds += ['cd {0} && bal push --repository local'.format(local)]
 
 		if not args.save:
 			cmds += ['yes|rm -r {0}'.format(local)]
