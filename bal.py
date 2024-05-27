@@ -18,8 +18,8 @@ if __name__ == "__main__":
 	if args.localize:
 		for x in [
 			f"""git clone git@github.com:{args.user}/{args.localize}""",
-			f"""cd {args.localize} && bal pack""",
-			f"""cd {args.localize} && bal push --repository local""",
+			f"""cd {args.localize} && bal pack """,
+			f"""cd {args.localize} && bal push --repository local """,
 			f"""yes|rm -r {args.localize}""",
 		]:
 			print(c);os.system(c);
@@ -27,9 +27,9 @@ if __name__ == "__main__":
 			for line in [
 				f""" """,
 				f"""[[dependency]]""",
-				f"""org = "{args.user}"""",
-				f"""name = "{args.localize}"""",
-				f"""version = "0.0.0"""",
-				f"""repository = "local"""",
+				f"""org = "{args.user}" """,
+				f"""name = "{args.localize}" """,
+				'version = "0.0.0"',
+				'repository = "local"',
 			]:
 				writer.write(line)
