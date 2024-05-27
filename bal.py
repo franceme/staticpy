@@ -6,7 +6,7 @@ def getArgs():
 	import argparse
 	parser = argparse.ArgumentParser("Ballerina Aide")
 	parser.add_argument("--localize", help="Clone, build, localize, and remove a custom repository (since ballerina central has some problems).",nargs=1, default=None)
-	parser.add_argument("--user", help="Username of github user.",nargs=1, default="franceme")
+	parser.add_argument("--user", help="Username of github user.",nargs=1, default=["franceme"])
 	parser.add_argument("--save", help="Don't delete the repository",action="store_true",default=False)
 	args,unknown = parser.parse_known_args()
 	return args
