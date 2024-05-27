@@ -81,7 +81,7 @@ def getArgs():
 	parser.add_argument("--firefly", help="Run Firefly 3",action='store_true',default=False)
 	parser.add_argument("--hoppscotch", help="Run HoppScotch",action='store_true',default=False)
 	parser.add_argument("--zoom", help="Run Zoom",action='store_true',default=False)
-	parser.add_argument("--knime", help="Run Knime",action='store_true',default=False)
+	#parser.add_argument("--knime", help="Run Knime",action='store_true',default=False)
 	parser.add_argument("--mrust", help="Run a mini Rust Docker container",nargs="?", default=None)
 	parser.add_argument("--postman", help="Run HoppScotch (alias for postman)",action='store_true',default=False)
 	parser.add_argument("--dozzle", help="Run Dozzle (monitor of docker images)",action='store_true',default=False)
@@ -647,7 +647,7 @@ if __name__ == '__main__':
 				).string()
 			]
 			bare_run &= False
-		elif args.knime:
+		elif False and args.knime:
 			cmds += [
 				dock(save_host_dir=savedir,network = network,
 					docker = "docker",
@@ -686,7 +686,7 @@ if __name__ == '__main__':
 					detach = detach,
 					sudo = sudo,
 					remove = True,
-					mountto = "/sync",
+					mountto = "/workspace",
 					mountfrom = args.knime,
 					#name: str = "current_running"
 					login = False,
