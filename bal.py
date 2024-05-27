@@ -15,6 +15,7 @@ if __name__ == "__main__":
 	args = getArgs()
 
 	#https://ballerina.io/learn/manage-dependencies/
+	print(args.localize)
 	if args.localize:
 		for x in [
 			'git clone git@github.com:{0}/{1}'.format(args.user, args.localize),
