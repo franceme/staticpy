@@ -17,18 +17,18 @@ if __name__ == "__main__":
 	#https://ballerina.io/learn/manage-dependencies/
 	if args.localize:
 		for x in [
-			f"""git clone git@github.com:{args.user}/{args.localize}""",
-			f"""cd {args.localize} && bal pack """,
-			f"""cd {args.localize} && bal push --repository local """,
-			f"""yes|rm -r {args.localize}""",
+			'git clone git@github.com:{0}/{1}'.format(args.user, args.localize),
+			'cd {0} && bal pack'.format(args.localize),
+			'cd {0} && bal push --repository local'.format(args.localize),
+			'yes|rm -r {0}'.format(args.localize),
 		]:
 			print(c);os.system(c);
 		with open("Ballerina.toml", "a+") as writer:
 			for line in [
-				f""" """,
-				f"""[[dependency]]""",
-				f"""org = "{args.user}" """,
-				f"""name = "{args.localize}" """,
+				" ",
+				'[[dependency]]',
+				'org = "{0}"'.format(args.user),
+				'name = "{0}"'.format(args.localize),
 				'version = "0.0.0"',
 				'repository = "local"',
 			]:
