@@ -20,10 +20,9 @@ if __name__ == "__main__":
 			f"""git clone git@github.com:{args.user}/{args.localize}""",
 			f"""cd {args.localize} && bal pack""",
 			f"""cd {args.localize} && bal push --repository local""",
+			f"""yes|rm -r {args.localize}""",
 		]:
-			print(c);
-			try:os.system(c);
-			except:pass;
+			print(c);os.system(c);
 		with open("Ballerina.toml", "a+") as writer:
 			for line in [
 				f""" """,
