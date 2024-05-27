@@ -12,24 +12,25 @@ def getArgs():
 
 
 if __name__ == "__main__":
-    args = getArgs()
+	args = getArgs()
 
-    if args.localize:
-        for x in [
-            f"""git clone git@github.com:{args.user}/{args.localize}""",
-            f"""cd {args.localize} && bal pack""",
-            f"""cd {args.localize} && bal push --repository local""",
-        ]:
-            print(c);
-            try:os.system(c);
-            except:pass;
-        with open("Ballerina.toml", "a+") as writer:
-            for line in [
-                f""" """,
-                f"""[[dependency]]""",
-                f"""org = "{args.user}"""",
-                f"""name = "{args.localize}"""",
-                f"""version = "0.0.0"""",
-                f"""repository = "local"""",
-            ]:
-                writer.write(line)
+	#https://ballerina.io/learn/manage-dependencies/
+	if args.localize:
+		for x in [
+			f"""git clone git@github.com:{args.user}/{args.localize}""",
+			f"""cd {args.localize} && bal pack""",
+			f"""cd {args.localize} && bal push --repository local""",
+		]:
+			print(c);
+			try:os.system(c);
+			except:pass;
+		with open("Ballerina.toml", "a+") as writer:
+			for line in [
+				f""" """,
+				f"""[[dependency]]""",
+				f"""org = "{args.user}"""",
+				f"""name = "{args.localize}"""",
+				f"""version = "0.0.0"""",
+				f"""repository = "local"""",
+			]:
+				writer.write(line)
