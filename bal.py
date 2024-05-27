@@ -23,7 +23,7 @@ if __name__ == "__main__":
 			'cd {0} && bal push --repository local'.format(localize),
 			'yes|rm -r {0}'.format(localize),
 		]:
-			print(c);os.system(c);
+			print(x);os.system(x);
 		with open("Ballerina.toml", "a+") as writer:
 			for line in [
 				" ",
