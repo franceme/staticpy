@@ -34,11 +34,11 @@ if __name__ == "__main__":
 
 		with open("Ballerina.toml", "a+") as writer:
 			for line in [
-				" ",
+				"",
 				'[[dependency]]',
 				'org = "{0}"'.format(args.user[0]),
 				'name = "{0}"'.format(localize),
 				'version = "0.0.0"',
 				'repository = "local"',
 			]:
-				writer.write(line)
+				writer.write(line+"\n")
