@@ -113,7 +113,7 @@ user_file = "/tmp/.ezgit.json"
 def getArgs():
 	import argparse
 	parser = argparse.ArgumentParser("Git EZ Aide")
-	parser.add_argument("-l","--login", help="setup git creds",nargs=1, default=None)
+	parser.add_argument("-l","--login", help="setup git creds",nargs=1, default=["frantzme@vt.edu"])
 	parser.add_argument("-f","--full", help="Start an ssh agent and add cert",nargs=1, default=None)
 	parser.add_argument("-o","--file", help="Update single file",nargs=1, default=None)
 	parser.add_argument("-m","--message",help="The message to commit with and push", nargs="?", default=None)
@@ -122,7 +122,7 @@ def getArgs():
 	parser.add_argument("--reset", action="store_true",default=False, help="Reset the current repo to the remote repo")
 	parser.add_argument("-a","--agent", action="store_true",default=False, help="Run the agent")
 	parser.add_argument("-c","--cert", help="Add the certificate",nargs=1, default=None)
-	parser.add_argument("-u","--user", help="Set the user name",nargs=1, default=None)
+	parser.add_argument("-u","--user", help="Set the user name",nargs=1, default=["franceme"])
 	parser.add_argument("-g","--clone", help="Clone a repo from the saved user name",nargs=1, default=None)
 	parser.add_argument("-z","--certz", help="Add the certificates from within ~/.ssh",action="store_true",default=False,)
 	parser.add_argument("-b","--branch", nargs=1,default=None, help="checkout the specified branch")
