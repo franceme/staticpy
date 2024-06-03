@@ -38,5 +38,6 @@ for x in [
     "monacopy",
     "python-dateutil",
     "starlark-go",# https://pypi.org/project/starlark-go/
+    "pandasql",
 ]:
     os.system("{0} -m pip install --upgrade {1}".format(sys.executable, x))
