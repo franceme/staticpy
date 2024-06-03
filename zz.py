@@ -88,6 +88,7 @@ def getArgs():
 	parser.add_argument("--inkscape", help="Run inkscape",action='store_true',default=False)
 	parser.add_argument("--ui", help="Run the base ui base docker image",nargs="?", default=None)
 	parser.add_argument("--knime", help="Run the base knime docker image",nargs="?", default=None)
+	parser.add_argument("--mojo", help="Run the base mojo docker image",nargs="?", default=None)
 	parser.add_argument("--ref", help="Run the ref base docker image",nargs="?", default=None)
 	parser.add_argument("--gsync", help="Run the base gsync base docker image",nargs="?", default=None)
 	parser.add_argument("--tor", help="Run TorBrowser",action='store_true',default=False)
@@ -696,6 +697,32 @@ if __name__ == '__main__':
 					postClean = False,
 					preClean = False,
 					extra = "--shm-size=512m -e VNC_PW=password"
+				).string()
+			]
+			bare_run &= False
+		elif args.mojo:
+			cmds += [ #https://hub.docker.com/r/openkbs/knime-vnc-docker/
+				dock(save_host_dir=savedir,network = network,
+					docker = "docker",
+					image = "frantzme/dev:mojo",
+					ports = [],
+					cmd = None,
+					#nocmd = True,
+					dind = dind,
+					shared = False,
+					detach = detach,
+					sudo = sudo,
+					remove = True,
+					mountto = "/mojo",
+					mountfrom = args.mojo,
+					#name: str = "current_running"
+					login = False,
+					loggout = False,
+					logg = False,
+					macaddress = None,
+					postClean = False,
+					preClean = False,
+					extra = None
 				).string()
 			]
 			bare_run &= False
