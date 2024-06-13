@@ -12,25 +12,6 @@ def getArgs():
 	args,unknown = parser.parse_known_args()
 	return args
 
-<user>@4f05d1901f06 /sync # 
-........................... while current_size > 3:
-...........................     current_size = compress(file='thenticate_report.pdf', file_out='thenticate_report_JUSTGHOSTSCRIPT.pdf', compress_value=compression)
-...........................     print(f"!!!!!Current Size of file: [{current_size}]")
-...........................     compression -= 2
-...........................     #import time;time.sleep(5)
-...........................
-........................... ^Iparser.add_argument("--save", help="Don't delete the repository",action="store_true",default=False)
-
-def compress(file='thenticate_report.pdf', file_out='thenticate_report_mini.pdf', compress_value=75):
-...........................     import os,sys,mystring
-...........................     if os.path.exists(file_out):os.remove(file_out)
-...........................     
-...........................     
-...........................     size=None
-...........................     if os.path.exists(file_out):
-...........................         size = os.stat(file_out).st_size/(1024*1024)
-...........................     return size
-
 if __name__ == "__main__":
 	args = getArgs()
     if args.install:
