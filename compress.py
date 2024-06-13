@@ -9,6 +9,7 @@ def getArgs():
 	parser.add_argument("-f", "--file", help="The pdf file to compress.",nargs=1, default=None)
 	parser.add_argument("--max", help="The max file size (MB).",nargs=1, default=[3])
 	parser.add_argument("--compression", help="The starting compression value",nargs=1, default=[60])
+	parser.add_argument("--itr", help="The iterating value value",nargs=1, default=[5])
 	args,unknown = parser.parse_known_args()
 	return args
 
@@ -23,6 +24,7 @@ if __name__ == "__main__":
         current_size = 100;
         compress_value=args.compression[0];
         max_file_size=args.max[0];
+        itr=args.itr[0];
 
 
         while current_size > max_file_size:
@@ -36,5 +38,6 @@ if __name__ == "__main__":
             else:
                 print("FILE DOESN'T EXIST")
                 sys.exit(-1)
+            compress_value -= itr;
 
         print(f"Compressed the file {file} to {file_out} with the following parameters {{compression:{compress_value},final_size:{current_size}}}")
