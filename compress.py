@@ -23,9 +23,9 @@ if __name__ == "__main__":
 		file_out = file.replace(".pdf", "_compressed.pdf")
 
 		current_size = 100;
-		compress_value=args.compression[0];
-		max_file_size=args.max[0];
-		itr=args.itr[0];
+		compress_value=int(args.compression[0]);
+		max_file_size=int(args.max[0]);
+		itr=int(args.itr[0]);
 
 
 		while current_size > max_file_size:
