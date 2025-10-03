@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import time
 import sys
 import typing
@@ -8,6 +9,7 @@ import shutil
 import datetime
 import pathlib
 import subprocess
+import tempfile
 import configargparse
 
 vboxmanage: typing.Optional[str] = shutil.which(cmd="VBoxManage")
@@ -40,7 +42,8 @@ class VBoxManager(object):
 
     def __init__(self, vm_file:str, vm_name:typing.Optional[str]=""):
         self.vm_file:str = vm_file
-        self.vm_name:str = vm_name or str(vm_file)#.replace("-","_").replace("/","_")
+        self.vm_name:str = vm_name or os.path.basename(str(vm_file)).replace('.ova','')
+        self.linux_base:bool = sys.platform.startswith('linux') or sys.platform == 'darwin'
 
     def unset_timesync(self):
         #<ExtraDataItem name="VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" value="1"/>
@@ -58,21 +61,86 @@ class VBoxManager(object):
         cmd:str = f"""{vboxmanage} {command}"""
         print(cmd)
 
-        process = subprocess.Popen(
-            args=cmd,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+        if not self.linux_base:
+            process = subprocess.Popen(
+                args=cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            stdout, stderr = process.communicate()
+
+            self.__show_wait_for(time_seconds=time_to_wait_for)
+
+            if process.returncode != 0:
+                raise Exception(f"Error running command {cmd}: {stderr}")
+
+            return stdout
+
+
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True) as stdout_file, tempfile.NamedTemporaryFile(mode='w+', delete=True) as stderr_file:
+            process = subprocess.Popen(
+                args=f"""{cmd} 1>> "{stdout_file.name}" 2>> "{stderr_file.name}" """,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+
+            last_stdout_size    : float = 0
+            last_stderr_size    : float = 0
+            poll_interval       : float=.1
+            stdout_content      : str = ""
+            stderr_content      : str = ""
+
+            try:
+                while process.poll() is None:
+                    # Monitor stdout
+                    if os.path.exists(stdout_file.name):
+                        with open(stdout_file.name, 'r') as f:
+                            f.seek(last_stdout_size)
+                            new_content = f.read()
+                            if new_content:
+                                print(new_content, end='')
+                                stdout_content += new_content
+                            last_stdout_size = f.tell()
+                    # Monitor stderr
+                    if os.path.exists(stderr_file.name):
+                        with open(stderr_file.name, 'r') as f:
+                            f.seek(last_stderr_size)
+                            new_content = f.read()
+                            if new_content:
+                                print(new_content, end='', file=sys.stderr)
+                                stderr_content += new_content
+                            last_stderr_size = f.tell()
+                    time.sleep(poll_interval)
+            finally:
+                # Print and collect any remaining content after process ends
+                if os.path.exists(stdout_file.name):
+                    with open(stdout_file.name, 'r') as f:
+                        f.seek(last_stdout_size)
+                        new_content = f.read()
+                        if new_content:
+                            print(new_content, end='')
+                            stdout_content += new_content
+                if os.path.exists(stderr_file.name):
+                    with open(stderr_file.name, 'r') as f:
+                        f.seek(last_stderr_size)
+                        new_content = f.read()
+                        if new_content:
+                            print(new_content, end='', file=sys.stderr)
+                            stderr_content += new_content
+
+            if process.returncode != 0:
+                raise Exception(f"Error running command {cmd}: {stderr_content}")
+
+            return stdout_content
+
+    def vm_exe(self, command:str, user:str="root", password:str="root", shell:str="/bin/sh") -> str:
+        return self.__vboxmanage(
+            f"""guestcontrol {self.vm_name} run --exe "{shell}" --username {user} --password {password} -- -c '{command}'"""
         )
-        stdout, stderr = process.communicate()
-
-        self.__show_wait_for(time_seconds=time_to_wait_for)
-
-        if process.returncode != 0:
-            raise Exception(f"Error running command {cmd}: {stderr}")
-
-        return stdout
 
     def load(self):
         print(f"Loading VM from {self.vm_file} as {self.vm_name}")
@@ -97,6 +165,26 @@ class VBoxManager(object):
         print(f"Removing VM {self.vm_name}")
         self.__vboxmanage(
             f"""unregistervm {self.vm_name} --delete"""
+        )
+
+    def add_shared_folder(self, folder_name:str, host_path:str, automount:bool=True, make_permanent:bool=True):
+        self.__vboxmanage(
+            f"""sharedfolder add {self.vm_name} --name "{folder_name}" --hostpath "{host_path}" {'--automount' if automount else ''} {'--permanent' if make_permanent else ''}"""
+        )
+    
+    def list_shared_folders(self) -> typing.List[str]:
+        return self.__vboxmanage(
+            f"""sharedfolder list {self.vm_name}"""
+        ).splitlines()
+
+    def add_file(self, source_path:str, dest_path:str, user:str="root", password:str="root", shell:str="/bin/sh"):
+        self.__vboxmanage(
+            f"""guestcontrol {self.vm_name} copyto "{source_path}" "{dest_path}" --username {user} --password {password} --shell {shell}"""
+        )
+
+    def disable_network_adapter(self, adapter_number:int=1):
+        self.__vboxmanage(
+            f"""modifyvm {self.vm_name} --nic{adapter_number} none"""
         )
 
     #region Snapshots
@@ -237,6 +325,44 @@ def parse_args() -> configargparse.Namespace:
         help="Whether to show info about the VM"
     )
 
+    parser.add_argument(
+        "--command_after_load",
+        type=str,
+        help="A command to run inside the VM after loading it"
+    )
+
+    parser.add_argument(
+        "--command_after_on",
+        type=str,
+        help="A command to run inside the VM after booting it"
+    )
+
+    parser.add_argument(
+        "--add_shared_folder",
+        nargs=2,
+        metavar=('FOLDER_NAME', 'HOST_PATH'),
+        help="Add a shared folder to the VM. Provide FOLDER_NAME and HOST_PATH."
+    )
+
+    parser.add_argument(
+        "--add_file",
+        nargs=2,
+        metavar=('SOURCE_PATH', 'DEST_PATH'),
+        help="Add a file to the VM. Provide SOURCE_PATH and DEST_PATH."
+    )
+
+    parser.add_argument(
+        "--disable_network_adapter",
+        action="store_true",
+        help="Disable the first network adapter of the VM"
+    )
+
+    parser.add_argument(
+        "--command_before_off",
+        type=str,
+        help="A command to run inside the VM before booting it"
+    )
+
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -255,6 +381,10 @@ if __name__ == "__main__":
         mgr.snapshot_take(
             snapshot_name=f"Initial setup {args.date.strftime('%Y-%m-%d')}"
         )
+        if args.command_after_load is not None:
+            args.on()
+            print(mgr.vm_exe(command=args.command_after_load))
+            args.off()
     
     if args.unset_timesync:
         mgr.unset_timesync()
@@ -264,8 +394,26 @@ if __name__ == "__main__":
             vm_date=args.set_date
         )
 
+    if args.disable_network_adapter:
+        mgr.disable_network_adapter(adapter_number=1)
+
     if args.on:
         mgr.online()
+
+        if args.command_after_on is not None:
+            print(mgr.vm_exe(command=args.command_after_on))
+
+    if args.add_shared_folder and args.add_shared_folder[1] not in mgr.list_shared_folders():
+        mgr.add_shared_folder(
+            folder_name=args.add_shared_folder[0],
+            host_path=args.add_shared_folder[1]
+        )
+    
+    if args.add_file:
+        mgr.add_file(
+            source_path=args.add_file[0],
+            dest_path=args.add_file[1]
+        )
 
     if args.take_snapshot is not None:
         mgr.snapshot_take(
@@ -278,6 +426,9 @@ if __name__ == "__main__":
         )
 
     if args.off:
+        if args.command_before_off is not None:
+            print(mgr.vm_exe(command=args.command_before_off))
+
         mgr.offline(force=False)
 
     if args.remove:
