@@ -21,6 +21,22 @@ function dep_install {
     cd $HOME/.sdkman/candidates/python/ && wget https://bootstrap.pypa.io/get-pip.py
 }
 
+function install_seven {
+    mkdir -p $HOME/.sdkman/candidates/python/3.7.10
+    cd $HOME/.sdkman/candidates/python/3.7.10
+    wget https://www.python.org/ftp/python/3.7.10/Python-3.7.10.tar.xz
+
+    tar -xvf Python-3.7.10.tar.xz
+    cd Python-3.7.10 && ./configure && make && make install && ./python $HOME/.sdkman/candidates/python/get-pip.py
+
+    echo "#!/bin/bash" >> /bin/py_seven
+    echo "$HOME/.sdkman/candidates/python/3.7.10/Python-3.7.10/python $@" >> /bin/py_seven
+    #echo "$HOME/.sdkman/candidates/python/3.7.10/python $@" >> /bin/py_seven
+
+    ln -s $HOME/.sdkman/candidates/python/3.7.10/ $HOME/.sdkman/candidates/python/current
+    ln -s $HOME/.sdkman/candidates/python/current/python /bin/spy
+}
+
 function install_eight {
     mkdir -p $HOME/.sdkman/candidates/python/3.8.15
     cd $HOME/.sdkman/candidates/python/3.8.15
@@ -83,14 +99,18 @@ function install_eleven {
 
 
 # https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-9.html#ss9.1
-echo usage: $0 "all | eight | nine | ten | eleven"
+echo usage: $0 "all | seven | eight | nine | ten | eleven"
 OPTIONS="all eight nine ten eleven"
 if [ -z "$1" ]; then 
-    echo usage: $0 "all | eight | nine | ten | eleven"
+    echo usage: $0 "all | seven | eight | nine | ten | eleven"
     exit
 fi
 
 dep_install
+
+if [ $1 == "seven" ] || [ $1 == "all" ]; then
+echo "Installing python seven" && install_seven
+fi
 
 if [ $1 == "eight" ] || [ $1 == "all" ]; then
 echo "Installing python eight" && install_eight
