@@ -21,6 +21,18 @@ function dep_install {
     cd $HOME/.sdkman/candidates/python/ && wget https://bootstrap.pypa.io/get-pip.py
 }
 
+function install_two {
+    mkdir -p $HOME/.sdkman/candidates/python/3.7.10
+    cd $HOME/.sdkman/candidates/python/2.7.18
+    wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+
+    tar xzf Python-2.7.18.tgz
+    cd Python-2.7.18 && ./configure --enable-optimizations && make altinstall
+
+    echo "#!/bin/bash" >> /bin/py_two
+    echo "$HOME/.sdkman/candidates/python/2.7.18/Python-2.7.18/python $@" >> /bin/py_two
+}
+
 function install_seven {
     mkdir -p $HOME/.sdkman/candidates/python/3.7.10
     cd $HOME/.sdkman/candidates/python/3.7.10
@@ -99,14 +111,18 @@ function install_eleven {
 
 
 # https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-9.html#ss9.1
-echo usage: $0 "all | seven | eight | nine | ten | eleven"
+echo usage: $0 "all | two | seven | eight | nine | ten | eleven"
 OPTIONS="all eight nine ten eleven"
 if [ -z "$1" ]; then 
-    echo usage: $0 "all | seven | eight | nine | ten | eleven"
+    echo usage: $0 "all | two | seven | eight | nine | ten | eleven"
     exit
 fi
 
 dep_install
+
+if [ $1 == "two" ] || [ $1 == "all" ]; then
+echo "Installing python two" && install_two
+fi
 
 if [ $1 == "seven" ] || [ $1 == "all" ]; then
 echo "Installing python seven" && install_seven
